@@ -1,0 +1,18 @@
+{
+  "name": "decisiontree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index",
+  "typings": "index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "c4.5": "^0.0.3",
+    "csv": "^6.2.5",
+    "nodemon": "^2.0.20"
+  }
+}
