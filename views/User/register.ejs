@@ -1,0 +1,28 @@
+<%- include("../partials/header.ejs")  %> 
+
+<main>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="content w-50">
+            <h1 class="text-center">Register</h1>
+            <% if (error !== null) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= error  %> 
+                </div>
+            <% } %>
+            <form action="/admin/register" method="post">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control " type="email" id="email" name="email">
+                <label class="form-label" for="name">Nama</label>
+                <input class="form-control" type="text" id="name" name="name">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password">
+                <label class="form-label" for="confpassword">Konfirmasi Password</label>
+                <input class="form-control" type="password" id="confpassword" name="confpassword">
+                <button class="form-control btn btn-primary mt-3">Register</button>
+                <p>Sudah punya akun?? Login <a href="/admin/login">disini</a></p>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include("../partials/footer.ejs")  %> 

@@ -1,0 +1,24 @@
+<%- include("../partials/header.ejs")  %> 
+
+<main>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="content w-50">
+            <h1 class="text-center">Login</h1>
+            <% if (error !== null) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= error  %> 
+                </div>
+            <% } %>
+            <form action="/admin/login" method="post">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" id="email" name="email">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password">
+                <button class="form-control btn btn-success mt-3">Login</button>
+                <p>Belum punya akun?? Daftar <a href="/admin/register">disini</a></p>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include("../partials/footer.ejs")  %> 

@@ -1,0 +1,43 @@
+<%- include("partials/header.ejs")  %> 
+
+<div class="container p-4">
+  <h1>Super Admin</h1>
+  <% if (error!==null) { %>
+    <div class="alert alert-<%= error.alert  %> " role="alert">
+      <%= error.message  %> 
+    </div>
+  <% } else if(success!==null) { %>
+    <div class="alert alert-<%= success.alert  %> " role="alert">
+      <%= success.message  %> 
+    </div>
+  <% } %> 
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th scope="col">No</th>
+        <th scope="col">Nama</th>
+        <th scope="col">Email</th>
+        <th scope="col">createAt</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let no=1 %> 
+      <% usersAdmin.forEach(user => { %>
+        <tr>
+          <th scope="row"><%= no++ %> </th>
+          <td><%=  user.name %> </td>
+          <td><%= user.email %> </td>
+          <td><%= user.createdAt  %> </td>
+          <td>
+            <a href="/delete/admin/<%= user.id  %> " class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i>delete</a>
+            <a href="/suspend/admin/<%= user.id %> " class="btn btn-warning btn-sm"><i class="fa-solid fa-power-off"></i> suspend</a>
+          </td>
+          
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs")  %> 
