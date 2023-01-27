@@ -11,10 +11,10 @@
             <% } %>
             <form action="/admin/login" method="post">
                 <label class="form-label" for="email">Email</label>
-                <input class="form-control" type="email" id="email" name="email">
+                <input value="<%= input ? input.email :""  %> " class="form-control" type="email" id="email" name="email">
                 <label class="form-label" for="password">Password</label>
                 <input class="form-control" type="password" id="password" name="password">
-                <button class="form-control btn btn-success mt-3">Login</button>
+                <button class="form-control btn btn-success mt-3"><i class="fa-solid fa-unlock"></i> Login</button>
                 <p>Belum punya akun?? Daftar <a href="/admin/register">disini</a></p>
             </form>
         </div>

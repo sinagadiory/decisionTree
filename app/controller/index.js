@@ -1,8 +1,9 @@
 
 const userController = require("./userController")
 const homeController = require("./homeController")
+const earthquekeController = require("./earthquakeController")
 
 
 module.exports = {
-  userController, homeController
+  userController, homeController, earthquekeController
 }

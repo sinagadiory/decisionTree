@@ -5,7 +5,8 @@
   "main": "index",
   "typings": "index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon bin/www"
   },
   "keywords": [],
   "author": "",
@@ -13,12 +14,12 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
-    "c4.5": "^0.0.3",
     "cookie-parser": "^1.4.6",
     "csv": "^6.2.5",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.0",
     "nodemon": "^2.0.20",
     "pg": "^8.8.0",

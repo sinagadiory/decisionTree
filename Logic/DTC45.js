@@ -1,17 +1,16 @@
 
-let data = [
-  ['1', 'Cerah', 'Panas', 'Tidak'],
-  ['2', 'Cerah', 'Panas', 'Tidak'],
-  ['3', 'Berawan', 'Panas', 'Ya'],
-  ['4', 'Hujan', 'Sejuk', 'Ya'],
-  ['5', 'Hujan', 'Dingin', 'Ya'],
-  ['6', 'Hujan', 'Dingin', 'Ya'],
-  ['7', 'Berawan', 'Dingin', 'Tidak'],
-  ['8', 'Cerah', 'Sejuk', 'Ya'],
-  ['9', 'Cerah', 'Dingin', 'Ya'],
-  ['10', 'Hujan', 'Sejuk', 'Ya']
-]
-
+// let data = [
+//   ['1', 'Cerah', 'Panas', 'Tidak'],
+//   ['2', 'Cerah', 'Panas', 'Tidak'],
+//   ['3', 'Berawan', 'Panas', 'Ya'],
+//   ['4', 'Hujan', 'Sejuk', 'Ya'],
+//   ['5', 'Hujan', 'Dingin', 'Ya'],
+//   ['6', 'Hujan', 'Dingin', 'Ya'],
+//   ['7', 'Berawan', 'Dingin', 'Tidak'],
+//   ['8', 'Cerah', 'Sejuk', 'Ya'],
+//   ['9', 'Cerah', 'Dingin', 'Ya'],
+//   ['10', 'Hujan', 'Sejuk', 'Ya']
+// ]
 class DTC45 {
 
   constructor(kelas, atribut, dataTraning) {
@@ -112,6 +111,7 @@ class DTC45 {
         }
       } else {
         if (this.GainRatio(data, faktor[item]) > max) {
+          // console.log(max);
           max = this.GainRatio(data, faktor[item])
           index = faktor[item]
         }
@@ -153,71 +153,72 @@ class DTC45 {
   }
 }
 
+module.exports = DTC45
 
 //Train
-let kelas = ["Ya", "Tidak"]
-let faktor = ["Cuaca", "Suhu"]
+// let kelas = ["Ya", "Tidak"]
+// let faktor = ["Cuaca", "Suhu"]
 
 
-let Algoritma = new DTC45(kelas, faktor, data)
+// let Algoritma = new DTC45(kelas, faktor, data)
 
-let atribut = {}
-let tree = {}
-for (let item in faktor) {
-  atribut[faktor[item]] = +item + 1
-}
+// let atribut = {}
+// let tree = {}
+// for (let item in faktor) {
+//   atribut[faktor[item]] = +item + 1
+// }
 
-//Find Beast Feature from faktor(atribut)
-let result = Algoritma.findBestAtribut(data, atribut, false)
+// //Find Beast Feature from faktor(atribut)
+// let result = Algoritma.findBestAtribut(data, atribut, false)
 
-//Contruct tree
-tree[faktor[result['index'] - 1]] = Algoritma.SplitPartisi(data, result['index'])
+// //Contruct tree
+// tree[faktor[result['index'] - 1]] = Algoritma.SplitPartisi(data, result['index'])
 
-// console.log("Result", result);
-// console.log("Atribut", atribut);
-// console.log("----------------Tree DTC45----------------");
-// console.log(tree);
+// // console.log("Result", result);
+// // console.log("Atribut", atribut);
+// // console.log("----------------Tree DTC45----------------");
+// // console.log(tree);
 
 
-function endClass(data) {
-  let result = false
-  let Class = null
-  for (let i = 0; i < data.length - 1; i++) {
-    if (data[i][data[i].length - 1] === data[i + 1][data[i + 1].length - 1]) {
-      result = true
-      Class = data[i + 1][data[i].length - 1]
-    }
-    else result = false
-  }
-  // console.log(result);
-  return result ? Class : result
-}
+// function endClass(data) {
+//   let result = false
+//   let Class = null
+//   for (let i = 0; i < data.length - 1; i++) {
+//     if (data[i][data[i].length - 1] === data[i + 1][data[i + 1].length - 1]) {
+//       result = true
+//       Class = data[i + 1][data[i].length - 1]
+//     }
+//     else result = false
+//   }
+//   // console.log(result);
+//   return result ? Class : result
+// }
 
-//Lanjutan 
-for (let value in tree) {
-  // console.log(tree[value]);
-  for (let item in tree[value]) {
-    // console.log(tree[value][item]);
-    if (endClass(tree[value][item])) {
-      tree[value][item] = endClass(tree[value][item])
-    } else {
-      console.log(Algoritma.Entropy(tree[value][item]));
-    }
-  }
-}
-delete atribut['Suhu']
-console.log("Tree", tree);
-console.log("--------------------------");
-for (let value in tree) {
-  for (let item in tree[value]) {
-    console.log(tree[value][item]);
-    if (typeof tree[value][item] === "object") {
-      let result = Algoritma.findBestAtribut(tree[value][item], atribut, false)
-      console.log(result);
-      tree[value][item][faktor[result['index'] - 1]] = Algoritma.SplitPartisi(tree[value][item], result['index'])
-    }
-  }
-}
+// //Lanjutan 
+// for (let value in tree) {
+//   // console.log(tree[value]);
+//   for (let item in tree[value]) {
+//     // console.log(tree[value][item]);
+//     if (endClass(tree[value][item])) {
+//       tree[value][item] = endClass(tree[value][item])
+//     } else {
+//       console.log(Algoritma.Entropy(tree[value][item]));
+//     }
+//   }
+// }
+// delete atribut['Suhu']
+// console.log("Tree", tree);
+// console.log("--------------------------");
+// for (let value in tree) {
+//   for (let item in tree[value]) {
+//     console.log(tree[value][item]);
+//     if (typeof tree[value][item] === "object") {
+//       let result = Algoritma.findBestAtribut(tree[value][item], atribut, false)
+//       console.log(result);
+//       tree[value][item][faktor[result['index'] - 1]] = Algoritma.SplitPartisi(tree[value][item], result['index'])
+//     }
+//   }
+// }
 // console.log(atribut);
 // console.log(tree);
 // console.log(end(tree['Suhu']['Sejuk']));

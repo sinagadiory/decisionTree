@@ -3,8 +3,10 @@ const { compare } = require("../../helper")
 
 class userService {
 
-  static register(request) {
-    return userRepository.create(request.name, request.email, request.password, request.role)
+  static async register(request) {
+    let user = await userRepository.findOneEmail(request.email)
+    if (user) return false
+    return userRepository.create(request.name, request.email, request.password, request.role, request.status)
   }
 
   static async login(request) {
@@ -24,6 +26,10 @@ class userService {
     return userRepository.findOneEmail(email)
   }
 
+  static findUserId(id) {
+    return userRepository.findOne(id)
+  }
+
   static findUsersRoleAdmin() {
     return userRepository.findAll()
   }
@@ -31,6 +37,11 @@ class userService {
   static async deleteAdmin(id) {
     if (! await userRepository.findOne(id)) return null
     return userRepository.deleteAdmin(id)
+  }
+
+  static async updateAdmin(request) {
+    if (!await userRepository.findOne(request.id)) return null
+    return userRepository.update(request.name, request.email, request.role, request.status, request.id)
   }
 }
 

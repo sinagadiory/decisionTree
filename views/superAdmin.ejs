@@ -19,6 +19,7 @@
         <th scope="col">Email</th>
         <th scope="col">createAt</th>
         <th>Action</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody>
@@ -31,9 +32,13 @@
           <td><%= user.createdAt  %> </td>
           <td>
             <a href="/delete/admin/<%= user.id  %> " class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i>delete</a>
-            <a href="/suspend/admin/<%= user.id %> " class="btn btn-warning btn-sm"><i class="fa-solid fa-power-off"></i> suspend</a>
+            <% if(user.status==='active') { %>
+              <a href="/suspend/admin/<%= user.id %> " class="btn btn-warning btn-sm"><i class="fa-solid fa-power-off"></i> suspend</a>
+            <% } else {  %>
+              <a href="/active/admin/<%= user.id %> " class="btn btn-success btn-sm"><i class="fa-solid fa-toggle-off"></i> aktifkan</a>
+            <%  } %>   
           </td>
-          
+          <td><%= user.status %> </td>
         </tr>
       <% }) %>
     </tbody>

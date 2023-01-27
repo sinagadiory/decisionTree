@@ -124,21 +124,20 @@ class Clustering {
     }
 
 
-    return clusters
+    return { clusters, centroids }
   }
 }
 
 
 let clustering = new Clustering()
 
-// console.log(clustering.kMeans([16, 16, 17, 20, 20, 21, 21, 22, 23, 29, 36, 41, 42, 43, 44, 45, 61, 62, 66], 2, true));
-// console.log("------------------");
-// console.log(clustering.kMeans([16, 16, 17, 20, 20, 21, 21, 22, 23, 29, 36, 41, 42, 43, 44, 45, 61, 62, 66], 2, false));
 
-// console.log(clustering.kMeans([22, 1, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 2, false));
 
-// console.log("----------------------------");
-// console.log(clustering.kMeans([22, 1, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 2, true));
+let result = clustering.kMeans([22, 1, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 2)
+
+// console.log(result);
+
+// console.log(clustering.findCluster(92, result.centroids));
 
 
 module.exports = Clustering

@@ -1,26 +1,26 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Earthquakes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      lokasi: {
         type: Sequelize.STRING
       },
-      email: {
-        type: Sequelize.STRING,
+      kekuatanGempa: {
+        type: Sequelize.FLOAT,
       },
-      password: {
-        type: Sequelize.STRING
+      kedalamanGempa: {
+        type: Sequelize.FLOAT,
       },
-      role: {
-        type: Sequelize.STRING
+      jarakGempa: {
+        type: Sequelize.FLOAT
       },
-      status: {
+      dampakGempa: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -34,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Earthquakes');
   }
 };

@@ -3,16 +3,16 @@ const { User } = require("../../models")
 
 class userRepository {
 
-  static create(name, email, password, role) {
-    return User.create({ name, email, password, role })
+  static create(name, email, password, role, status) {
+    return User.create({ name, email, password, role, status })
   }
 
-  static update(name, email, password, role, id) {
-    return User.update({ name, email, password, role }, { where: { id } })
+  static update(name, email, role, status, id) {
+    return User.update({ name, email, role, status }, { where: { id } })
   }
 
   static findAll() {
-    return User.findAll({ where: { role: "admin" } })
+    return User.findAll({ where: { role: "admin" }, order: [['id', 'DESC']] })
   }
 
   static findOneEmail(email) {

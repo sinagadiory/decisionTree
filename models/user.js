@@ -63,6 +63,19 @@ module.exports = (sequelize, DataTypes) => {
         isIn: [['superadmin', 'admin']],
       },
     },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Status cannot be omitted",
+        },
+        notEmpty: {
+          msg: "Status cannot be an empty string",
+        },
+        isIn: [['active', 'pending', 'delete', 'suspend']]
+      },
+    }
 
   }, {
     hooks: {

@@ -1,15 +1,16 @@
 
 const router = require("express").Router()
 
-const { userRoute, homeRoute } = require("./partials")
-const { authMiddleware, superAdmin } = require("../app/middleware")
+const { userRoute, homeRoute, earthquekeRoute } = require("./partials")
 
 
+router.use(earthquekeRoute)
 router.use("/admin", userRoute)
-router.use(authMiddleware, homeRoute)
+router.use(homeRoute)
 
 router.use((req, res) => {
-  res.render("notFound", { title: "Not Found", css: null })
+  res.render("notFound", { title: "NotFound", css: null })
 })
+
 
 module.exports = router
