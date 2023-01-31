@@ -6,7 +6,7 @@ class homeController {
   static async index(req, res) {
     let limit = !req.query.limit ? 7 : req.query.limit
     let Earthquakes = await Earthquake.findAll({ limit })
-    res.render("index", { title: "Prediksi Gempa di Indonesia", css: "index.css", data: Earthquakes })
+    res.render("index", { title: "Prediksi Gempa di Indonesia", css: "index.css", data: Earthquakes, js: "index.js" })
   }
 
   static async home(req, res) {
@@ -18,13 +18,13 @@ class homeController {
       res.redirect("/admin/login")
       return
     }
-    res.render("home", { title: "Home", css: "home.css", user, data: Earthquakes })
+    res.render("home", { title: "Home", css: "home.css", user, data: Earthquakes, js: "home.js" })
   }
 
   static async superAdmin(req, res) {
     let user = await userService.findUser(req.user.email)
     let users = await userService.findUsersRoleAdmin()
-    res.render("superAdmin", { title: "SuperAdmin", css: null, user, usersAdmin: users, error: null, success: null })
+    res.render("superAdmin", { title: "SuperAdmin", css: null, user, usersAdmin: users, error: null, success: null, js: null })
   }
 
   static async deleteAdmin(req, res) {
@@ -35,7 +35,7 @@ class homeController {
       if (! await userService.deleteAdmin(id)) throw { message: "user tidak ditemukan", alert: "danger" }
       res.redirect("/superadmin")
     } catch (error) {
-      res.render("superAdmin", { title: "SuperAdmin", css: null, user, usersAdmin: users, error, success: null })
+      res.render("superAdmin", { title: "SuperAdmin", css: null, user, usersAdmin: users, error, success: null, js: null })
     }
   }
 }

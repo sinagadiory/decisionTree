@@ -4,7 +4,7 @@ const { userService } = require("../service")
 class userController {
 
   static viewLogin(req, res) {
-    res.render("User/login", { title: "Login", css: "login.css", error: null, input: null })
+    res.render("User/login", { title: "Login", css: "login.css", error: null, input: null, js: null })
   }
 
   static async postLogin(req, res) {
@@ -23,12 +23,12 @@ class userController {
         .redirect(301, '/admin/register')
 
     } catch (error) {
-      res.render("User/login", { title: "Login", css: "login.css", error: error.message, input: req.body })
+      res.render("User/login", { title: "Login", css: "login.css", error: error.message, input: req.body, js: null })
     }
   }
 
   static viewRegister(req, res) {
-    res.render("User/register", { title: "Register", css: "register.css", error: null, input: null })
+    res.render("User/register", { title: "Register", css: "register.css", error: null, input: null, js: null })
   }
 
   static async postRegister(req, res) {
@@ -42,13 +42,11 @@ class userController {
       let err = null
       if (error.name === 'err') err = error.message
       else err = error.errors[0].message
-      res.render("User/register", { title: "Register", css: "register.css", error: err, input: req.body })
+      res.render("User/register", { title: "Register", css: "register.css", error: err, input: req.body, js: null })
     }
   }
 
   static async updateStatus(req, res) {
-    // res.send(req.originalUrl.split("/")[1])
-    // return
     let user = await userService.findUser(req.user.email)
     let users = await userService.findUsersRoleAdmin()
     try {
@@ -60,7 +58,7 @@ class userController {
       res.redirect("/superadmin")
     } catch (error) {
       console.log(error);
-      res.render("superAdmin", { title: "SuperAdmin", css: null, user, usersAdmin: users, error: null, success: null })
+      res.render("superAdmin", { title: "SuperAdmin", css: null, user, usersAdmin: users, error: null, success: null, js: null })
     }
   }
 

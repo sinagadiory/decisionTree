@@ -1,12 +1,14 @@
+const splitValidation = require("./splitValidation")
+const crossValidation = require("./crossValidation")
 
 let data = [
   ["A", 11, 26, "Kota"],
   ["B", 15, 29, "Kota"],
   ["C", 19, 28, "Kota"],
   ["D", 18, 30, "Kota"],
-  // ["E", 16, 26, "Kota"],
+  ["E", 16, 26, "Kota"],
   ["F", 23, 25, "Kabupaten"],
-  // ["G", 25, 22, "Kabupaten"],
+  ["G", 25, 22, "Kabupaten"],
   ["H", 21, 24, "Kabupaten"],
   ["I", 23, 29, "Kabupaten"],
   ["J", 29, 24, "Kabupaten"]
@@ -98,7 +100,7 @@ class Knn {
 
   }
 
-  test(data) {
+  accuracy(data) {
     let result = 0
     let test = []
     for (let d of data) {
@@ -118,7 +120,33 @@ class Knn {
 
 let atribut = ["Latitude", "Longitude"]
 
-let knn = new Knn(atribut, data)
+
+let split = new splitValidation()
+let cross = new crossValidation()
+
+//Split Validation
+// const { dataTraning, dataTesting } = split.runSplitValidation(data, 8)
+// console.log(dataTraning);
+// console.log("-----------------");
+// console.log(dataTesting);
+// let knn = new Knn(atribut, dataTraning)
+
+// console.log(knn.accuracy(dataTesting));
+
+
+//k-crossValidation
+const partisi = cross.runCrossValidation(data, 10)
+console.log(partisi);
+let jumlah = 0
+for (let i = 0; i < partisi.length; i++) {
+  let { dataTraning, dataTesting } = cross.splitCrossValidation(partisi, i)
+  let knn = new Knn(atribut, dataTraning)
+  jumlah += knn.accuracy(dataTesting)
+}
+console.log(jumlah / partisi.length);
+
+
+// console.log(knn.Train([25, 22]));
 
 // console.log(knn.test(test));
 

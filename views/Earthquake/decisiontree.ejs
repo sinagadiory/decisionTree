@@ -1,0 +1,38 @@
+<%- include("../partials/header.ejs")  %> 
+
+<div class="container py-3">
+  <h1>Halaman Index</h1>
+  <div class="row my-4 pt-4 pb-5">
+    <div class="col-lg-8">
+      <a class="btn add btn-success btn-sm" style="text-decoration: none;" href="/knn"><i class="fa-solid fa-brain"></i> KNN(K-Nearest Neigbords)</a>
+      <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/naivebayes"><i class="fa-solid fa-calculator"></i> Naive Bayes</a>
+      <h4 class="mt-1">Decision Tree</h4>
+      <form style="width: 80%;" method="POST" action="/knn">
+        <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
+        <input required class="form-control" type="text" name="kekuatanGempa">
+        <label id="kedalamanGempa" class="form-label" for="kedalamanGempa">Kedalaman Gempa</label>
+        <input required class="form-control" type="text" name="kedalamanGempa">
+        <label id="jarakGempa" class="form-label" for="jarakGempa">Jarak Pusat Gempa</label>
+        <input required class="form-control" type="text" name="jarakGempa">
+        <select class="form-select mt-2" aria-label=".form-select-sm example">
+          <option selected>Algoritma</option>
+          <option value="id3">ID3</option>
+          <option value="c45">C45</option>
+        </select>
+        <button class="form-control btn btn-warning mt-3"><i class="fa-solid fa-house-crack"></i> Prediksi</button>
+      </form>
+    </div>
+    <div class="col-lg-4 align-self-center">
+      <% if (result!==null) { %>
+        <h1>Hasil Prediksi</h1>
+        <h3><%= result %> </h3>
+      <% } else if(result===null) { %>
+        <img style="max-width: 90%;" src="/static/decisiontree.png" alt=""><br>
+        <strong>Decision Tree adalah salah satu metode klasifikasi yang mengelompokan suatu object berdasarkan information Gain(ID3) atau Gain ratio(C4.5)</strong>
+        <a href="/decisiontreeMethod">pelajarilebihlanjut</a>
+      <% }  %> 
+    </div>
+  </div>
+</div>
+
+<%- include("../partials/footer.ejs")  %> 

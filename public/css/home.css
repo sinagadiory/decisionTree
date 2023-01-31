@@ -2,3 +2,9 @@
   padding: 20px 20px;
   box-shadow: 1px 1px 3px 3px rgb(218, 214, 214);
 }
+
+input{
+  padding: 2px;
+  border: 1px solid rgb(240, 232, 226) ;
+  border-radius: 5%;
+}

@@ -9,7 +9,7 @@ router.use("/admin", userRoute)
 router.use(homeRoute)
 
 router.use((req, res) => {
-  res.render("notFound", { title: "NotFound", css: null })
+  res.render("notFound", { title: "NotFound", css: null, js: null })
 })
 
 

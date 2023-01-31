@@ -19,7 +19,7 @@ class Clustering {
   }
 
   findCenterRandom(data) {
-    let index = Math.floor(Math.random() * (data.length - 1)) + 0
+    let index = Math.floor(Math.random() * (data.length)) + 0
     return data[index]
   }
 
@@ -28,7 +28,7 @@ class Clustering {
 
     let k = Math.floor(data.length / n)
     let result = []
-    let i = Math.floor(Math.random() * (k - 1)) + 0
+    let i = Math.floor(Math.random() * (k)) + 0
 
     let j = 0
     while (j < n) {
@@ -133,9 +133,12 @@ let clustering = new Clustering()
 
 
 
-let result = clustering.kMeans([22, 1, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 2)
+// let result = clustering.kMeans([22, 1, 2, 3, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 3, true)
 
 // console.log(result);
+
+// console.log("-------------------------------");
+// console.log(clustering.kMeans([22, 1, 2, 3, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 3, false));
 
 // console.log(clustering.findCluster(92, result.centroids));
 

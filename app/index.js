@@ -9,6 +9,8 @@ const router = require("../router")
 
 app.set("view engine", 'ejs')
 app.use("/static", express.static("public/css"))
+app.use("/static", express.static("public/javascript"))
+app.use("/static", express.static("public/images"))
 
 dotenv.config()
 
