@@ -1,30 +1,9 @@
 <%- include("partials/header.ejs")  %> 
-<nav class="navbar navbar-expand-lg bg-body-tertiary px-5">
-  <div class="container-fluid py-1">
-    <a class="navbar-brand" href="#">Gempa</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <a href="/admin/login" class="btn btn-sm btn-outline-success" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
-        <!-- <strong>admin</strong> -->
-      </form>
-    </div>
-  </div>
-</nav>
+<%- include("partials/navbar.ejs")  %> 
 
 <div class="container py-3 my-3">
   <div class="row">
-    <h3>Tabel Gempa</h3>
+    <h5>Tabel Gempa</h5>
     <div class="d-flex justify-content-between mb-2">
       <div class="tombol">
         <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/unduh"><i class="fa-solid fa-download"></i> Export data</a>

@@ -5,10 +5,10 @@ const row = document.querySelector(".row")
 
 var xhr = new XMLHttpRequest();
 
-const BarisGempa = (data) => {
+const BarisGempa = (data, no) => {
   return `
     <tr>
-      <th scope="row">${data.id}</th>
+      <th scope="row">${no}</th>
       <td>${data.lokasi}</td>
       <td>${data.kekuatanGempa}</td>
       <td>${data.kedalamanGempa}</td>
@@ -22,13 +22,13 @@ search.addEventListener("keyup", function (e) {
   e.preventDefault()
   let url = "/search?keyword=";
   xhr.onreadystatechange = function () {
-    let id = 1
+    let no = 1
     if (this.readyState === 4 && this.status === 200) {
       let data = JSON.parse(this.responseText)
       let result = ""
       for (let d of data) {
-        d.id = id++
-        result += BarisGempa(d)
+        result += BarisGempa(d, no)
+        no++
       }
       hasil.innerHTML = result;
     }
@@ -44,13 +44,13 @@ select.addEventListener('click', function (e) {
   if (select.value === 'Show') select.value = 7
   let url = "/gempa?limit=";
   xhr.onreadystatechange = function () {
-    let id = 1
+    let no = 1
     if (this.readyState === 4 && this.status === 200) {
       let data = JSON.parse(this.responseText)
       let result = ""
       for (let d of data) {
-        d.id = id++
-        result += BarisGempa(d)
+        result += BarisGempa(d, no)
+        no++
       }
       hasil.innerHTML = result;
     }

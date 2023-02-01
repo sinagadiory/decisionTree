@@ -1,7 +1,8 @@
 <%- include("../partials/header.ejs")  %> 
+<%- include("../partials/navbar.ejs") %> 
 
 <div class="container py-3">
-  <h1>Halaman Index</h1>
+  <h1>Prediksi</h1>
   <div class="row my-4 pt-4 pb-5">
     <div class="col-lg-8">
       <a class="btn add btn-success btn-sm" style="text-decoration: none;" href="/decisiontree"><i class="fa-solid fa-tree"></i> Decision Tree</a>
@@ -9,13 +10,13 @@
       <h4 class="mt-1">KNN(K-Nearest Neigbords)</h4>
       <form style="width: 80%;" method="POST" action="/knn">
         <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
-        <input required class="form-control" type="text" name="kekuatanGempa">
+        <input value="<%= data ? data.kekuatanGempa :"" %> " required class="form-control" type="text" name="kekuatanGempa">
         <label id="kedalamanGempa" class="form-label" for="kedalamanGempa">Kedalaman Gempa</label>
-        <input required class="form-control" type="text" name="kedalamanGempa">
+        <input value="<%= data ? data.kedalamanGempa : "" %> " required class="form-control" type="text" name="kedalamanGempa">
         <label id="jarakGempa" class="form-label" for="jarakGempa">Jarak Pusat Gempa</label>
-        <input required class="form-control" type="text" name="jarakGempa">
-        <label id="k" class="form-label" for="k">K(Optional)</label>
-        <input class="form-control" type="number" name="k">
+        <input value="<%= data ? data.jarakGempa :"" %>" required class="form-control" type="text" name="jarakGempa">
+        <label id="k" class="form-label" for="k">K</label>
+        <input value="<%= data ? data.k : 3 %>" required class="form-control" type="number" name="k">
         <button class="form-control btn btn-warning mt-3"><i class="fa-solid fa-house-crack"></i> Prediksi</button>
       </form>
     </div>

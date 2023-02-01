@@ -1,0 +1,60 @@
+<%- include("../partials/header.ejs")  %> 
+<%- include("../partials/navbar.ejs") %> 
+
+<div class="container py-3 my-2">
+  <div class="d-flex justify-content-between">
+    <div class="time"></div>
+  </div>
+  <div class="row my-4">
+    <h5>Evaluasi Model KNN(k-fold cross Validation)</h5>
+    <div class="dropdown mt-2 mb-4 ">
+      <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        K
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=5">5</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=6">6</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=7">7</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=8">8</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=9">9</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=10">10</a></li>
+      </ul>
+    </div>
+    <% let nomor=1 %> 
+    <% data.forEach(partisi => { %>
+      <h4>Table <%= nomor++ %> </h4>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Lokasi</th>
+            <th scope="col">Kekuatan Gempa</th>
+            <th scope="col">Kedalaman Gempa</th>
+            <th scope="col">Jarak Pusat Gempa</th>
+            <th scope="col">Dampak Gempa</th>
+            <th scope="col">Prediksi</th>
+          </tr>
+        </thead>
+        <tbody class="hasil">
+          <% let no=1 %> 
+          <% partisi.forEach(d => { %>
+            <% if (typeof d!=='number') { %>
+              <tr>
+                <th scope="row"><%= no++ %> </th>
+                <td><%=  d.lokasi %> </td>
+                <td><%= d.kekuatanGempa %> </td>
+                <td><%= d.kedalamanGempa  %> </td>
+                <td><%= d.jarakGempa  %> </td>
+                <td><%= d.dampakGempa %> </td>
+                <td><%= d.prediksi %> </td>
+              </tr>
+            <% } %>
+          <% }) %>
+        </tbody>
+      </table>
+      <h5 class="text-center"><span style="color: rgb(28, 28, 202);">Benar:, </span> <span style="color: rgb(193, 50, 50);">Salah: , </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= partisi[partisi.length-1] %>%</span> </h5>
+    <% }) %>
+  </div>
+</div>
+
+<%- include("../partials/footer.ejs")  %> 

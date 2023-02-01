@@ -12,6 +12,7 @@ function authMiddleware(req, res, next) {
     next()
   } catch (error) {
     res.redirect("/admin/login")
+    return
   }
 }
 

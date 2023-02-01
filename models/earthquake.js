@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Kekuatan gempa tidak boleh kosong",
         },
+        isNumeric: {
+          msg: "tidak menerima inputan selain number"
+        }
       },
     },
     kedalamanGempa: {
@@ -32,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Kedalaman gempa tidak boleh kosong",
         },
+        isNumeric: {
+          msg: "tidak menerima inputan selain number"
+        }
       },
     },
     jarakGempa: {
@@ -41,6 +47,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Jarak pusat gempa tidak boleh kosong",
         },
+        isNumeric: {
+          msg: "tidak menerima inputan selain number"
+        }
       },
     },
     dampakGempa: {
@@ -48,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
+          args: true,
           msg: "Dampak gempa tidak boleh kosong",
         },
       },

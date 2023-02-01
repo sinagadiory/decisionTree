@@ -73,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Status cannot be an empty string",
         },
-        isIn: [['active', 'pending', 'delete', 'suspend']]
+        isIn: [['active', 'pending', 'suspend']]
       },
     }
 

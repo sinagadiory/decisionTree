@@ -1,0 +1,26 @@
+<nav style="background-color: rgb(244, 242, 249);" class="navbar navbar-expand-lg px-5">
+  <div class="container-fluid ">
+    <!-- <a class="navbar-brand" href="#">Gempa</a> -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <% if (css!=='home.css' && css!=='update.css') { %>
+            <a style="font-size: 25px;font-weight: 600;color:rgb(148, 125, 125)" class="nav-link active" aria-current="page" href="/"><img style="width: 47px;" src="/static/bmkg.png" alt=""></a>
+          <% } else { %>
+            <a style="font-size: 25px;font-weight: 600;color:rgb(148, 125, 125)" class="nav-link active" aria-current="page" href="/home"><img style="width: 47px;" src="/static/bmkg.png" alt=""></a>
+          <% }  %> 
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <% if (css!=='home.css' && css!=='update.css') { %>
+          <a href="/admin/login" class="btn btn-sm btn-outline-success" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <% } else { %>
+          <a href="/logout" class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Logout</a>
+        <% } %> 
+      </form>
+    </div>
+  </div>
+</nav>

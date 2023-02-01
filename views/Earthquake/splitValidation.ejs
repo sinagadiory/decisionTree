@@ -1,0 +1,79 @@
+<%- include("../partials/header.ejs")  %> 
+<%- include("../partials/navbar.ejs") %> 
+
+<div class="container py-3 my-2">
+  <div class="d-flex justify-content-between">
+    <div class="time"></div>
+  </div>
+  <div class="row my-4">
+    <h5>Evaluasi Model KNN(Split Validation)</h5>
+    <div class="dropdown mt-2 ">
+      <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Rasio
+      </a>
+    
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/evaluasi/splitvalidation?rasio=7">7:3</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/splitvalidation?rasio=8">8:2</a></li>
+        <li><a class="dropdown-item" href="/evaluasi/splitvalidation?rasio=9">9:1</a></li>
+      </ul>
+    </div>
+    <h5>Data Testing</h5>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Lokasi</th>
+          <th scope="col">Kekuatan Gempa</th>
+          <th scope="col">Kedalaman Gempa</th>
+          <th scope="col">Jarak Pusat Gempa</th>
+          <th scope="col">Dampak Gempa</th>
+          <th scope="col">Prediksi</th>
+        </tr>
+      </thead>
+      <tbody class="hasil">
+        <% let no=1 %> 
+        <% dataTesting.forEach(d => { %>
+          <tr>
+            <th scope="row"><%= no++ %> </th>
+            <td><%=  d.lokasi %> </td>
+            <td><%= d.kekuatanGempa %> </td>
+            <td><%= d.kedalamanGempa  %> </td>
+            <td><%= d.jarakGempa  %> </td>
+            <td><%= d.dampakGempa %> </td>
+            <td><%= d.prediksi %> </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <h4 class="text-center"><span style="color: rgb(28, 28, 202);">Benar: <%= benar %>, </span> <span style="color: rgb(193, 50, 50);">Salah: <%=salah %>, </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= prediksi %>%</span> </h4>
+    <h5>Data Traning</h5>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Lokasi</th>
+          <th scope="col">Kekuatan Gempa</th>
+          <th scope="col">Kedalaman Gempa</th>
+          <th scope="col">Jarak Pusat Gempa</th>
+          <th scope="col">Dampak Gempa</th>
+        </tr>
+      </thead>
+      <tbody class="hasil">
+        <% no=1 %> 
+        <% dataTraning.forEach(d => { %>
+          <tr>
+            <th scope="row"><%= no++ %> </th>
+            <td><%=  d.lokasi %> </td>
+            <td><%= d.kekuatanGempa %> </td>
+            <td><%= d.kedalamanGempa  %> </td>
+            <td><%= d.jarakGempa  %> </td>
+            <td><%= d.dampakGempa %> </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include("../partials/footer.ejs")  %> 

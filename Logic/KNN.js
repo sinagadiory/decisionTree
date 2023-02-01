@@ -2,20 +2,32 @@ const splitValidation = require("./splitValidation")
 const crossValidation = require("./crossValidation")
 
 let data = [
-  ["A", 11, 26, "Kota"],
-  ["B", 15, 29, "Kota"],
-  ["C", 19, 28, "Kota"],
-  ["D", 18, 30, "Kota"],
-  ["E", 16, 26, "Kota"],
-  ["F", 23, 25, "Kabupaten"],
-  ["G", 25, 22, "Kabupaten"],
-  ["H", 21, 24, "Kabupaten"],
-  ["I", 23, 29, "Kabupaten"],
-  ["J", 29, 24, "Kabupaten"]
+  ['Barat Laut Kab Cianjur', 2.1, 10, 5, 'Not Fealt'],
+  ['Tenggara Pesisir Barat', 4.7, 46, 55, 'Not Fealt'],
+  ['Barat Laut Kab Cianjur', 4.3, 10, 7, 'Fealt'],
+  ['Timur Laut Alor', 4, 10, 45, 'Fealt'],
+  ['Timur Laut Jayapura', 4.9, 10, 13, 'Fealt'],
+  ['Barat Daya Kab Purwakarta', 3.6, 7, 22, 'Fealt'],
+  ['Tenggara Meulaboh', 4.8, 1, 91, 'Not Fealt'],
+  ['Barat Laut Kab Cianjur', 3.4, 4, 8, 'Fealt'],
+  ['Timur Laut Kota Jayapura', 4, 10, 36, 'Not Fealt'],
+  ['Timur Laut Kota Jayapura', 3.4, 10, 18, 'Not Fealt'],
 ]
 
+// let data = [
+//   ["A", 11, 26, "Kota"],
+//   ["B", 15, 29, "Kota"],
+//   ["C", 19, 28, "Kota"],
+//   ["D", 18, 30, "Kota"],
+//   ["E", 16, 26, "Kota"],
+//   ["F", 23, 25, "Kabupaten"],
+//   ["G", 25, 22, "Kabupaten"],
+//   ["H", 21, 24, "Kabupaten"],
+//   ["I", 23, 29, "Kabupaten"],
+//   ["J", 29, 24, "Kabupaten"]
+// ]
 let test = [
-  ["E", 16, 26, "Kota"], ["G", 25, 22, "Kabupaten"],
+  ["E", 16, 26, "Kota"], ["G", 25, 22, "Kabupaten"], ["R", 30, 11, "Kota"]
 ]
 
 class Knn {
@@ -40,6 +52,7 @@ class Knn {
     for (let i = 0; i < x.length; i++) {
       result += (x[i] - y[i]) ** 2
     }
+
     return Math.sqrt(result)
   }
 
@@ -90,6 +103,7 @@ class Knn {
       dataEuclidDistance.push([item[0], this.EuclideanDistance(x, datum), item[item.length - 1]])
     }
 
+
     dataEuclidDistance.sort(function (a, b) { return a[1] - b[1] })
     let kTitik = []
     for (let i = 0; i < k; i++) {
@@ -108,7 +122,7 @@ class Knn {
     }
     for (let i = 0; i < test.length; i++) {
 
-      if (this.Train(test[i]) === data[i][data[i].length - 1]) {
+      if (this.Train(test[i]).trim() === data[i][data[i].length - 1].trim()) {
         result += 1
       }
     }
@@ -118,7 +132,32 @@ class Knn {
 }
 
 
-let atribut = ["Latitude", "Longitude"]
+// let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa']
+// // let atribut = ["Latitude", "Longitude"]
+
+// let knn = new Knn(atribut, data)
+// console.log(knn.accuracy(data));
+// let result = []
+// data.map((d) => {
+//   let prediksi = (knn.Train(d.slice(1, d.length - 1)));
+//   result.push([...d, prediksi])
+//   // d.push(prediksi)
+// })
+// console.log("----------------");
+// console.log(knn.Train([4.8, 1, 91]));
+
+// console.log("----------------------------");
+// console.log(knn.accuracy(data));
+
+// for (let i = 0; i < data.length; i++) {
+//   let prediksi = knn.Train(data[i].slice(1, data[i].length - 1))
+//   data[i].push(prediksi)
+//   console.log(data[i].slice(1, data[i].length - 1));
+//   console.log(prediksi);
+// }
+
+// console.log(data);
+// console.log(knn.Train([4.8, 1, 91]));
 
 
 let split = new splitValidation()
@@ -135,15 +174,15 @@ let cross = new crossValidation()
 
 
 //k-crossValidation
-const partisi = cross.runCrossValidation(data, 10)
-console.log(partisi);
-let jumlah = 0
-for (let i = 0; i < partisi.length; i++) {
-  let { dataTraning, dataTesting } = cross.splitCrossValidation(partisi, i)
-  let knn = new Knn(atribut, dataTraning)
-  jumlah += knn.accuracy(dataTesting)
-}
-console.log(jumlah / partisi.length);
+// const partisi = cross.runCrossValidation(data, 10)
+// console.log(partisi);
+// let jumlah = 0
+// for (let i = 0; i < partisi.length; i++) {
+//   let { dataTraning, dataTesting } = cross.splitCrossValidation(partisi, i)
+//   let knn = new Knn(atribut, dataTraning)
+//   jumlah += knn.accuracy(dataTesting)
+// }
+// console.log(jumlah / partisi.length);
 
 
 // console.log(knn.Train([25, 22]));

@@ -12,10 +12,10 @@ setInterval(() => {
 
 var xhr = new XMLHttpRequest();
 
-const BarisGempa = (data) => {
+const BarisGempa = (data, no) => {
   return `
     <tr>
-      <th scope="row">${data.id}</th>
+      <th scope="row">${no}</th>
       <td>${data.lokasi}</td>
       <td>${data.kekuatanGempa}</td>
       <td>${data.kedalamanGempa}</td>
@@ -33,13 +33,13 @@ search.addEventListener("keyup", function (e) {
   e.preventDefault()
   let url = "/search?keyword=";
   xhr.onreadystatechange = function () {
-    let id = 1
+    let no = 1
     if (this.readyState === 4 && this.status === 200) {
       let data = JSON.parse(this.responseText)
       let result = ""
       for (let d of data) {
-        d.id = id++
-        result += BarisGempa(d)
+        result += BarisGempa(d, no)
+        no++
       }
       hasil.innerHTML = result;
     }
@@ -72,7 +72,7 @@ add.addEventListener("click", function (e) {
           <option class="text-white" style="background-color:red" value="Heavy Demage">Heavy Demage </option>
         </select>
       </div>
-      <button class="form-control btn btn-warning mt-3"><i class="fa-solid fa-plus"></i> Tambah</button>
+      <button class="form-control btn btn-outline-primary mt-3"><i class="fa-solid fa-plus"></i> Tambah</button>
     </form>
   </div>
   <div class="col-lg-5 align-self-center">
@@ -93,13 +93,13 @@ select.addEventListener('click', function (e) {
   if (select.value === 'Show') select.value = 7
   let url = "/gempa?limit=";
   xhr.onreadystatechange = function () {
-    let id = 1
+    let no = 1
     if (this.readyState === 4 && this.status === 200) {
       let data = JSON.parse(this.responseText)
       let result = ""
       for (let d of data) {
-        d.id = id++
-        result += BarisGempa(d)
+        result += BarisGempa(d, no)
+        no++
       }
       hasil.innerHTML = result;
     }

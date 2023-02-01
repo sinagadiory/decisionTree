@@ -1,0 +1,49 @@
+<%- include("../partials/header.ejs")  %> 
+<%- include("../partials/navbar.ejs") %> 
+
+<div class="container py-3 my-2">
+  <div class="row">
+    <div class="col-lg-7">
+      <a id="show" class="btn btn-info text-white btn-sm" style="text-decoration: none;" href="/home"><i class="fa-solid fa-table"></i> Show Table</a>
+        <form style="width: 80%;" method="POST" action="/update/gempa/<%= data.id %> ">
+          <label id="lokasi" class="form-label" for="lokasi">Lokasi</label>
+          <input required value="<%= data.lokasi %> " class="form-control" type="text" name="lokasi">
+          <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
+          <input required value="<%= data.kekuatanGempa %> " class="form-control" type="text" name="kekuatanGempa">
+          <label id="kedalamanGempa" class="form-label" for="kedalamanGempa">Kedalaman Gempa</label>
+          <input required value="<%= data.kedalamanGempa %>" class="form-control" type="text" name="kedalamanGempa">
+          <label id="jarakGempa" class="form-label" for="jarakGempa">Jarak Pusat Gempa</label>
+          <input required value="<%= data.jarakGempa %>" class="form-control" type="text" name="jarakGempa">
+          <div class="input-group mt-3">
+            <select name="dampakGempa" class="form-select" id="inputGroupSelect01">
+              <option hidden><%= data.dampakGempa %> </option>
+              <option value="Not Fealt">Not Fealt</option>
+              <option style="background-color: rgb(41, 212, 41);" value="Fealt">Fealt</option>
+              <option style="background-color:yellow;" value="Slight Demage">Slight Demage </option>
+              <option style="background-color: orange;" value="Moderate Demage">Moderate Demage </option>
+              <option class="text-white" style="background-color:red" value="Heavy Demage">Heavy Demage </option>
+            </select>
+          </div>
+          <button class="form-control btn btn-info mt-3"><i class="fa-solid fa-pen-to-square"></i> Update</button>
+        </form>
+      </div>
+      <div class="col-lg-5 align-self-center">
+        <% if (error!==null) { %>
+          <div class="alert alert-danger" role="alert">
+            <%= error %> 
+          </div>
+        <% } else { %>
+          <% if (!success) { %>
+            <h1>Update Gempa</h1>
+          <% } else { %>
+            <div class="alert alert-success" role="alert">
+              Berhasil di update
+            </div>
+          <%  } %> 
+        <% }  %> 
+      </div>
+  </div>
+</div>
+
+
+<%- include("../partials/footer.ejs")  %> 
