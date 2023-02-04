@@ -1,7 +1,9 @@
-const select = document.querySelector("select")
-const option = document.querySelector("option")
+const proses = document.querySelector(".proses")
+const input = document.querySelector("#k")
 
-// select.addEventListener("click", function () {
-//   console.log(select);
-// })
-console.log(option);
+const url = window.location.href
+
+proses.addEventListener("click", function () {
+  proses.innerHTML = "Loading..."
+  window.location.href = `${url}` + `&k=${input.value}`
+})

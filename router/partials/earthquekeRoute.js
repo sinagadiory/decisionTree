@@ -11,8 +11,8 @@ router.get("/decisiontree", earthquekeController.DecicionTree)
 router.get("/update/gempa/:id", authMiddleware, earthquekeController.update)
 router.get("/tableKnn", earthquekeController.tableKnn)
 router.get("/unduhTableKnn", earthquekeController.unduhTableKnn)
-router.get("/evaluasi/splitvalidation", earthquekeController.evaluasiModel)
-router.get("/evaluasi/crossvalidation", earthquekeController.evaluasiModelCrossValidation)
+router.get("/evaluasiknn/splitvalidation", earthquekeController.evaluasiModel)
+router.get("/evaluasiknn/crossvalidation", earthquekeController.evaluasiModelCrossValidation)
 
 //post
 router.post("/add/gempa", earthquekeController.add)

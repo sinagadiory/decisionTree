@@ -7,20 +7,27 @@
   </div>
   <div class="row my-4">
     <h5>Tabel KNN</h5>
+    <div class="w-25 mb-3">
+      <div class="d-flex">
+        <input name="k" id="k" placeholder="inputkan k" class="form-control mx-2" type="number">
+        <button class="form-control btn btn-outline-primary proses">Proses</button>
+      </div>
+    </div>
     <div class="d-flex justify-content-between mb-2">
-      <div class="tombol">
-        <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/unduhTableKnn"><i class="fa-solid fa-download"></i> Export data</a>
-        <div class="dropdown mt-2 ">
-          <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <div class="tombol d-flex">
+        <div class="dropdown">
+          <a class="btn btn-outline-secondary btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Show
           </a>
         
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/tableknn?limit=10">10</a></li>
             <li><a class="dropdown-item" href="/tableknn?limit=25">25</a></li>
-            <li><a class="dropdown-item" href="/tableknn?limit=52">52</a></li>
+            <li><a class="dropdown-item" href="/tableknn?limit=50">50</a></li>
+            <li><a class="dropdown-item" href="/tableknn?limit=100">All</a></li>
           </ul>
         </div>
+        <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/unduhTableKnn"><i class="fa-solid fa-download"></i> Export data</a>
       </div>
     </div>
     <table class="table table-striped table-bordered table-hover">

@@ -1,4 +1,8 @@
+let Alea = require("alea");
 
+let Mathseedrandom = function (seed) {
+  Math.random = new Alea(seed);
+};
 
 class Clustering {
 
@@ -67,6 +71,9 @@ class Clustering {
     let clusters = []
     let centroids = []
     let check = []
+
+    Mathseedrandom(42)
+
     let i = 0
     while (i < k) {
       if (systematicSample) {
@@ -129,7 +136,7 @@ class Clustering {
 }
 
 
-let clustering = new Clustering()
+// let clustering = new Clustering()
 
 
 

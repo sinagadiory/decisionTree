@@ -1,11 +1,15 @@
-﻿No ,Cuaca ,Suhu ,Keputusan
-1,Cerah,Panas ,Tidak
-2,Cerah,Panas ,Tidak
-3,Berawan,Panas ,Ya
-4,Hujan,Sejuk,Ya
-5,Hujan,Dingin,Ya
-6,Hujan,Dingin,Ya
-7,Berawan,Dingin,Tidak
-8,Cerah,Sejuk,Ya
-9,Cerah,Dingin,Ya
-10,Hujan,Sejuk,Ya
+﻿"outlook", "windy", "humidity", "play"
+sunny, false, high, no
+sunny, true, high, no
+sunny, false, high, no
+sunny, false, medium, yes
+sunny, true, medium, yes
+overcast, false, medium, yes
+overcast, true, medium, yes
+overcast, true, high, yes
+overcast, false, medium, yes
+rain, false, high, yes
+rain, false, medium, yes
+rain, true, medium, no
+rain, false, medium, yes
+rain, true, medium, no

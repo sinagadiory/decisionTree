@@ -7,18 +7,28 @@
   </div>
   <div class="row my-4">
     <h5>Evaluasi Model KNN(k-fold cross Validation)</h5>
-    <div class="dropdown mt-2 mb-4 ">
-      <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        K
-      </a>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=5">5</a></li>
-        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=6">6</a></li>
-        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=7">7</a></li>
-        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=8">8</a></li>
-        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=9">9</a></li>
-        <li><a class="dropdown-item" href="/evaluasi/crossvalidation?k=10">10</a></li>
-      </ul>
+    <div class="w-25 mb-3">
+      <div class="d-flex">
+        <input name="k" id="k" placeholder="inputkan k" class="form-control mx-2" type="number">
+        <button class="form-control btn btn-outline-primary proses">Proses</button>
+      </div>
+    </div>
+    <div class="mb-3">
+      <h3 class="text-center">Hasil Evaluasi</h3>
+      <table class="table table-warning table-bordered w-50 m-auto">
+        <thead>
+          <tr>
+            <th scope="col">Rata-rata Akurasi</th>
+            <th scope="col">Simpangan Baku</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= rata %> </td>
+            <td><%= simpanganBaku %> </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <% let nomor=1 %> 
     <% data.forEach(partisi => { %>
@@ -52,7 +62,7 @@
           <% }) %>
         </tbody>
       </table>
-      <h5 class="text-center"><span style="color: rgb(28, 28, 202);">Benar:, </span> <span style="color: rgb(193, 50, 50);">Salah: , </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= partisi[partisi.length-1] %>%</span> </h5>
+      <h5 class="text-center"><span style="color: rgb(28, 28, 202);">Benar: <%= partisi[0] %>, </span> <span style="color: rgb(193, 50, 50);">Salah: <%=partisi[1] %>, </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= partisi[2] %>%</span> </h5>
     <% }) %>
   </div>
 </div>

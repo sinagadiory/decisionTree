@@ -114,7 +114,7 @@ class Knn {
 
   }
 
-  accuracy(data) {
+  accuracy(data, k = 3) {
     let result = 0
     let test = []
     for (let d of data) {
@@ -122,7 +122,7 @@ class Knn {
     }
     for (let i = 0; i < test.length; i++) {
 
-      if (this.Train(test[i]).trim() === data[i][data[i].length - 1].trim()) {
+      if (this.Train(test[i], k).trim() === data[i][data[i].length - 1].trim()) {
         result += 1
       }
     }

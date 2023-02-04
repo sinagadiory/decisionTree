@@ -1,5 +1,5 @@
 
-const { download } = require("../../helper")
+const { download, simpanganBaku } = require("../../helper")
 const { Earthquake } = require("../../models")
 const { Op } = require("sequelize")
 let { KNN, splitValidation, crossValidation } = require("../../Logic/index")
@@ -46,7 +46,7 @@ class earthquekeController {
 
   //KNN
   static async KNN(req, res) {
-    res.render("Earthquake/knn", { title: "KNN", css: "knn.css", js: null, result: null, data: null })
+    res.render("Earthquake/knn", { title: "KNN", css: "knn.css", js: "knn.js", result: null, data: null })
   }
 
   static async postKnn(req, res) {
@@ -61,7 +61,9 @@ class earthquekeController {
     let datum = [+req.body.kekuatanGempa, +req.body.kedalamanGempa, +req.body.jarakGempa]
     let result = knn.Train(datum, +req.body.k)
 
-    res.render("Earthquake/knn", { title: "KNN", css: "knn.css", js: null, result, data: req.body })
+    setTimeout(() => {
+      res.render("Earthquake/knn", { title: "KNN", css: "knn.css", js: "knn.js", result, data: req.body })
+    }, 1500)
   }
 
   static async evaluasiModel(req, res) {
@@ -102,13 +104,14 @@ class earthquekeController {
     })
 
 
-    res.render("Earthquake/splitValidation", { title: "Split Validation", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi })
+    res.render("Earthquake/splitValidation", { title: "Split Validation KNN", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi })
   }
 
   static async evaluasiModelCrossValidation(req, res) {
+    let k = !req.query.k ? 10 : req.query.k
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
     let CV = new crossValidation()
-    let data = CV.runCrossValidation(Earthquakes, 8)
+    let data = CV.runCrossValidation(Earthquakes, k)
     let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa']
 
     let rata2 = [] //for rata2
@@ -117,6 +120,7 @@ class earthquekeController {
 
     for (let i = 0; i < data.length; i++) {
       let { dataTraning, dataTesting } = CV.splitCrossValidation(data, i)
+
       let dataTrain = []
       for (let gempa of dataTraning) {
         dataTrain.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
@@ -132,30 +136,35 @@ class earthquekeController {
       for (let j = 0; j < dataTest.length; j++) {
         let prediksi = knn.Train(dataTest[j].slice(1, dataTest[j].length - 1), 3)
         data[i][j] = { lokasi: data[i][j].lokasi, kekuatanGempa: data[i][j].kekuatanGempa, kedalamanGempa: data[i][j].kedalamanGempa, jarakGempa: data[i][j].jarakGempa, dampakGempa: data[i][j].dampakGempa, prediksi }
-        // let benar = 0
-        // let salah = 0
-        // data[i][j].map((e) => {
-        //   if (e.dampakGempa === e.prediksi) {
-        //     benar += 1
-        //   } else {
-        //     salah += 1
-        //   }
-        // })
       }
+      let benar = 0
+      let salah = 0
+      data[i].map((e) => {
+        if (e.dampakGempa === e.prediksi) {
+          benar += 1
+        } else {
+          salah += 1
+        }
+      })
+      Databenar[i] = benar
+      Datasalah[i] = salah
     }
-
-    // return res.send(data)
 
     for (let z = 0; z < data.length; z++) {
-      data[z] = [...data[z], rata2[z]]
+      data[z] = [Databenar[z], Datasalah[z], rata2[z], ...data[z]]
     }
 
-    res.render("Earthquake/crossValidation", { title: "Cross Validation", css: "index.css", js: null, data })
+    const sum = rata2.reduce((partialSum, a) => partialSum + a, 0);
+
+    res.render("Earthquake/crossValidation", { title: "Cross Validation KNN", css: "index.css", js: "crossValidation.js", data, rata: (sum / (rata2.length)).toFixed(2), simpanganBaku: simpanganBaku(rata2) })
   }
 
 
   static async tableKnn(req, res) {
     let limit = !req.query.limit ? 7 : req.query.limit
+    let k = !req.query.k ? 3 : (typeof req.query.k === 'object' ? req.query.k[(req.query.k).length - 1] : req.query.k)
+
+
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], limit, order: [['id', 'ASC']] })
 
     let data = []
@@ -166,10 +175,10 @@ class earthquekeController {
     let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa']
     let knn = new KNN(atribut, data)
 
-    let prediksi = (knn.accuracy(data)).toFixed(2)
+    let prediksi = (knn.accuracy(data, k)).toFixed(2)
 
     for (let i = 0; i < data.length; i++) {
-      let prediksi = knn.Train(data[i].slice(1, data[i].length - 1), 3)
+      let prediksi = knn.Train(data[i].slice(1, data[i].length - 1), k)
       Earthquakes[i] = { lokasi: Earthquakes[i].lokasi, kekuatanGempa: Earthquakes[i].kekuatanGempa, kedalamanGempa: Earthquakes[i].kedalamanGempa, jarakGempa: Earthquakes[i].jarakGempa, dampakGempa: Earthquakes[i].dampakGempa, prediksi }
     }
     let benar = 0
