@@ -1,0 +1,83 @@
+<%- include("../partials/header.ejs")  %> 
+<%- include("../partials/navbar.ejs")  %> 
+
+<div class="container my-5 py-3">
+  <div class="row">
+    <table class="table table-primary table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Statistik</th>
+          <th scope="col">N</th>
+          <th scope="col">Modus</th>
+          <th scope="col">Minimum</th>
+          <th scope="col">Maksimum</th>
+          <th scope="col">Range</th>
+          <th scope="col">Jumlah</th>
+          <th scope="col">Mean</th>
+          <th scope="col">Simpangan Baku</th>
+          <th scope="col">Varians</th>
+          <th scope="col">Q1</th>
+          <th scope="col">Q2</th>
+          <th scope="col">Q3</th>
+          <th scope="col">Jangkauan Interkuartil</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Kekuatan Gempa</td>
+          <td><%= kekuatanGempa.length %> </td>
+          <td><%= ss.mode(kekuatanGempa) %> </td>
+          <td><%= ss.min(kekuatanGempa) %> </td>
+          <td><%= ss.max(kekuatanGempa) %> </td>
+          <td><%= ss.max(kekuatanGempa)-ss.min(kekuatanGempa) %> </td>
+          <td><%= ss.sum(kekuatanGempa) %> </td>
+          <td><%= ss.mean(kekuatanGempa).toFixed(2) %> </td>
+          <td><%= ss.sampleStandardDeviation(kekuatanGempa).toFixed(2)  %> </td>
+          <td><%= ss.sampleVariance(kekuatanGempa).toFixed(2) %> </td>
+          <td><%= ss.quantile(kekuatanGempa,0.25) %> </td>
+          <td><%= ss.quantile(kekuatanGempa,0.5) %> </td>
+          <td><%= ss.quantile(kekuatanGempa,0.75) %> </td>
+          <td><%= ss.interquartileRange(kekuatanGempa).toFixed(2) %> </td>
+        </tr>
+        <tr>
+          <td>Kedalaman Gempa</td>
+          <td><%= kedalamanGempa.length %> </td>
+          <td><%= ss.mode(kedalamanGempa) %> </td>
+          <td><%= ss.min(kedalamanGempa) %> </td>
+          <td><%= ss.max(kedalamanGempa) %> </td>
+          <td><%= ss.max(kedalamanGempa)-ss.min(kedalamanGempa) %> </td>
+          <td><%= ss.sum(kedalamanGempa) %> </td>
+          <td><%= ss.mean(kedalamanGempa).toFixed(2) %> </td>
+          <td><%= ss.sampleStandardDeviation(kedalamanGempa).toFixed(2)  %> </td>
+          <td><%= ss.sampleVariance(kedalamanGempa).toFixed(2) %> </td>
+          <td><%= ss.quantile(kedalamanGempa,0.25) %> </td>
+          <td><%= ss.quantile(kedalamanGempa,0.5) %> </td>
+          <td><%= ss.quantile(kedalamanGempa,0.75) %> </td>
+          <td><%= ss.interquartileRange(kedalamanGempa).toFixed(2) %> </td>
+        </tr>
+        <tr>
+          <td>Jarak Pusat Gempa</td>
+          <td><%= jarakGempa.length %> </td>
+          <td><%= ss.mode(jarakGempa) %> </td>
+          <td><%= ss.min(jarakGempa) %> </td>
+          <td><%= ss.max(jarakGempa) %> </td>
+          <td><%= ss.max(jarakGempa)-ss.min(jarakGempa) %> </td>
+          <td><%= ss.sum(jarakGempa) %> </td>
+          <td><%= ss.mean(jarakGempa).toFixed(2) %> </td>
+          <td><%= ss.sampleStandardDeviation(jarakGempa).toFixed(2)  %> </td>
+          <td><%= ss.sampleVariance(jarakGempa).toFixed(2) %> </td>
+          <td><%= ss.quantile(jarakGempa,0.25) %> </td>
+          <td><%= ss.quantile(jarakGempa,0.5) %> </td>
+          <td><%= ss.quantile(jarakGempa,0.75) %> </td>
+          <td><%= ss.interquartileRange(jarakGempa).toFixed(2) %> </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="col-lg-12">
+      <div id="boxplot1"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/tes.js"></script>
+<%- include("../partials/footer.ejs")  %> 

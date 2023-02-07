@@ -10,14 +10,17 @@ router.get("/knn", earthquekeController.KNN)
 router.get("/decisiontree", earthquekeController.DecicionTree)
 router.get("/update/gempa/:id", authMiddleware, earthquekeController.update)
 router.get("/tableKnn", earthquekeController.tableKnn)
+router.get("/tabledecisiontree", earthquekeController.tableDecisionTree)
 router.get("/unduhTableKnn", earthquekeController.unduhTableKnn)
 router.get("/evaluasiknn/splitvalidation", earthquekeController.evaluasiModel)
 router.get("/evaluasiknn/crossvalidation", earthquekeController.evaluasiModelCrossValidation)
+router.get("/evaluasidecisiontree/splitvalidation", earthquekeController.splitValidationDT)
+router.get("/evaluasidecisiontree/crossvalidation", earthquekeController.evaluasiModelCrossValidationDT)
 
 //post
 router.post("/add/gempa", earthquekeController.add)
 router.post("/knn", earthquekeController.postKnn)
 router.post("/update/gempa/:id", authMiddleware, earthquekeController.postUpdate)
-
+router.post("/decisiontree", earthquekeController.postDecisionTree)
 
 module.exports = router

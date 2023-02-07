@@ -6,23 +6,24 @@
     <div class="time"></div>
   </div>
   <div class="row my-4">
-    <h5>Tabel KNN</h5>
+    <h5>Evaluasi Model Decision Tree(Split Validation)</h5>
     <form style="width: 50%;" method="GET">
       <div class="d-flex mb-3">
-        <input type="text" name="k" class="form-control" placeholder="inputkan k">
-        <select name="limit" required class="form-select mx-2" aria-label=".form-select-sm example">
-          <option value="7" selected>Show</option>
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">All</option>
+        <select name="algo" required class="form-select mx-2" aria-label=".form-select-sm example">
+          <option value="c45" selected>Algoritma</option>
+          <option value="id3">ID3</option>
+          <option value="c45">C45</option>
+        </select>
+        <select name="rasio" required class="form-select mx-2" aria-label=".form-select-sm example">
+          <option value=8 selected>Rasio</option>
+          <option value=7>7:3</option>
+          <option value=8>8:2</option>
+          <option value=9>9:1</option>
         </select>
         <button class="form-control prosesDT btn btn-warning"><i class="fa-solid fa-house-crack"></i> Proses</button>
       </div>
     </form>
-    <div class="d-flex justify-content-between mb-2">
-      <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/unduhTableKnn"><i class="fa-solid fa-download"></i> Export data</a>
-    </div>
+    <h5>Data Testing</h5>
     <table class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
@@ -37,7 +38,7 @@
       </thead>
       <tbody class="hasil">
         <% let no=1 %> 
-        <% data.forEach(d => { %>
+        <% dataTesting.forEach(d => { %>
           <tr>
             <th scope="row"><%= no++ %> </th>
             <td><%=  d.lokasi %> </td>
@@ -51,8 +52,33 @@
       </tbody>
     </table>
     <h4 class="text-center"><span style="color: rgb(28, 28, 202);">Benar: <%= benar %>, </span> <span style="color: rgb(193, 50, 50);">Salah: <%=salah %>, </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= prediksi %>%</span> </h4>
+    <h5>Data Traning</h5>
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Lokasi</th>
+          <th scope="col">Kekuatan Gempa</th>
+          <th scope="col">Kedalaman Gempa</th>
+          <th scope="col">Jarak Pusat Gempa</th>
+          <th scope="col">Dampak Gempa</th>
+        </tr>
+      </thead>
+      <tbody class="hasil">
+        <% no=1 %> 
+        <% dataTraning.forEach(d => { %>
+          <tr>
+            <th scope="row"><%= no++ %> </th>
+            <td><%=  d.lokasi %> </td>
+            <td><%= d.kekuatanGempa %> </td>
+            <td><%= d.kedalamanGempa  %> </td>
+            <td><%= d.jarakGempa  %> </td>
+            <td><%= d.dampakGempa %> </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
   </div>
 </div>
-
 
 <%- include("../partials/footer.ejs")  %> 

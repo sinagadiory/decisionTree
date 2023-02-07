@@ -42,7 +42,7 @@ const select = document.querySelector("select")
 select.addEventListener('click', function (e) {
   e.preventDefault()
   if (select.value === 'Show') select.value = 7
-  let url = "/gempa?limit=";
+  let url = window.location.href.split("?")[1] !== "type=Category" ? "/gempa?limit=" : "/gempa?type=Category&limit=";
   xhr.onreadystatechange = function () {
     let no = 1
     if (this.readyState === 4 && this.status === 200) {

@@ -6,8 +6,30 @@
     <h5>Tabel Gempa</h5>
     <div class="d-flex justify-content-between mb-2">
       <div class="tombol">
-        <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/unduh"><i class="fa-solid fa-download"></i> Export data</a>
-        <select class="form-select mt-2 form-select-sm" aria-label=".form-select-sm example">
+        <a class="btn btn-primary btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Show By
+        </a>
+      
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/?type=Category">ByCategory</a></li>
+          <li><a class="dropdown-item" href="/">NotByCategory</a></li>
+        </ul>
+        <a class="btn btn-dark btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-download"></i> Export data
+        </a>
+      
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/unduh?type=Category">ByCategory</a></li>
+          <li><a class="dropdown-item" href="/unduh">NotByCategory</a></li>
+        </ul>
+      </div>
+      <form action="" role="search">
+        <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
+      </form>
+    </div>
+    <div class="d-flex">
+      <div class="input-group mt-2 mb-3" style="max-width: 10%;">
+        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
           <option selected>Show</option>
           <option value="10">10</option>
           <option value="25">25</option>
@@ -15,9 +37,6 @@
           <option value="100">All</option>
         </select>
       </div>
-      <form action="" role="search">
-        <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
-      </form>
     </div>
     <table class="table table-striped table-bordered table-hover">
       <thead>

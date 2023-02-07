@@ -1,10 +1,11 @@
 
 const router = require("express").Router()
 
-const { userRoute, homeRoute, earthquekeRoute, contentRoute } = require("./partials")
+const { userRoute, homeRoute, earthquekeRoute, contentRoute, visualRoute } = require("./partials")
 
 router.use(contentRoute)
 router.use(earthquekeRoute)
+router.use(visualRoute)
 router.use("/admin", userRoute)
 router.use(homeRoute)
 

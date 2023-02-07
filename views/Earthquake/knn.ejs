@@ -10,14 +10,14 @@
       <h4 class="mt-1">KNN(K-Nearest Neigbords)</h4>
       <form style="width: 80%;" method="post" action="/knn">
         <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
-        <input value="<%= data ? data.kekuatanGempa :"" %> " required class="form-control" type="text" name="kekuatanGempa">
+        <input required value="<%= data ? data.kekuatanGempa : "" %> " class="form-control" type="text" name="kekuatanGempa">
         <label id="kedalamanGempa" class="form-label" for="kedalamanGempa">Kedalaman Gempa</label>
-        <input value="<%= data ? data.kedalamanGempa : "" %> " required class="form-control" type="text" name="kedalamanGempa">
+        <input required value="<%= data ? data.kedalamanGempa : "" %> " class="form-control" type="text" name="kedalamanGempa">
         <label id="jarakGempa" class="form-label" for="jarakGempa">Jarak Pusat Gempa</label>
-        <input value="<%= data ? data.jarakGempa :"" %>" required class="form-control" type="text" name="jarakGempa">
+        <input required value="<%= data ? data.jarakGempa :"" %>" class="form-control" type="text" name="jarakGempa">
         <label id="k" class="form-label" for="k">K</label>
         <input value="<%= data ? data.k : 3 %>" required class="form-control" type="number" name="k">
-        <button class="form-control btn prosesKnn btn-warning mt-3"><i class="fa-solid fa-house-crack"></i> Prediksi</button>
+        <button type="submit" class="form-control btn prosesKnn btn-warning mt-3"><i class="fa-solid fa-house-crack"></i> Prediksi</button>
       </form>
     </div>
     <div class="col-lg-4 content align-self-center">

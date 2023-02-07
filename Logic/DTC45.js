@@ -109,6 +109,9 @@ class DTC45 {
   }
 
   GainRatio(data, index) {
+    if (this.InformationGain(data, index) / this.SplitInfo(data, index) != "number") {
+      return 0
+    }
     return this.InformationGain(data, index) / this.SplitInfo(data, index)
   }
 
@@ -202,6 +205,7 @@ class DTC45 {
     let best = this.findBestAtribut(data, faktor, algoC45)
     let tree = {}
     tree.atribut = this.atribut[best.index - 1]
+    // console.log(this.atribut[best.index - 1]);
     tree.child = {}
     let dataPartisi = this.SplitPartisi(data, best.index)
     for (let item in dataPartisi) {
@@ -260,6 +264,522 @@ class DTC45 {
 
 // let tree = Decision.BuildTree(dataSuny, faktor, true)
 // console.log(JSON.stringify(tree));
+
+
+// let dataGempa = [
+//   [
+//     "Barat Laut Kab Cianjur  ",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Tenggara Pesisir Barat",
+//     "sedangK",
+//     "sedangD",
+//     "sedangJ",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Kab Cianjur",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Alor",
+//     "sedangK",
+//     "dangkal",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kab Purwakarta",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Meulaboh",
+//     "sedangK",
+//     "dangkal",
+//     "sedangJ",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Kab Cianjur",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Kota Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Timur Laut Kota Jayapura",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Daya Kota Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Wonosobo",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Timur Laut Pamala",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Kota Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Kota Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Pacitan",
+//     "kuat",
+//     "dangkal",
+//     "jauh",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Melonguane",
+//     "kuat",
+//     "sedangD",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Bone Bolango",
+//     "kuat",
+//     "dalam",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Kota Jayapura",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Daya Kab Cianjur",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Kab Cianjur",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Ruteng",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Kab Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Tenggara Kab Pekalongan",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Kab Pekalongan",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Kab Pekalongan",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Pulau Sipora",
+//     "sedangK",
+//     "dangkal",
+//     "sedangJ",
+//     "Not"
+//   ],
+//   [
+//     "Barat Daya Kab Malang",
+//     "sedangK",
+//     "dangkal",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Jayapura",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Kab Cianjur",
+//     "kuat",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Maluku",
+//     "kuat",
+//     "dalam",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Pacitan",
+//     "kuat",
+//     "sedangD",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Kab Karangasem",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Kota Sukabumi",
+//     "kuat",
+//     "dalam",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Kab Garut",
+//     "kuat",
+//     "dalam",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Selatan Kota Garut",
+//     "sedangK",
+//     "sedangD",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kota Bengkulu",
+//     "kuat",
+//     "dangkal",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kab Garut",
+//     "kuat",
+//     "dangkal",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Kab Tojo Una-una",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Kota Lahat",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kota Muara Enim",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Selatan Kab Lebak",
+//     "kuat",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Kab Sumedang",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Kab Tapanuli Utara",
+//     "kuat",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kab Aceh Barat",
+//     "kuat",
+//     "dangkal",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Kepulauan Mentawai",
+//     "kuat",
+//     "dangkal",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Membaromo Raya",
+//     "kuat",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Kab Kepulauan Mentawai",
+//     "kuat",
+//     "dangkal",
+//     "jauh",
+//     "Fealt"
+//   ],
+//   [
+//     "Kab Kaur, Prov Bengkulu",
+//     "kuat",
+//     "dangkal",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Kab Aceh ",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat daya gunung Kidul",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Kab Bandung",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Kab Cianjur",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat daya Daruba",
+//     "kuat",
+//     "dalam",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur laut Tabelo",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Wonosobo",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Timur Laut Wonosobo",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Luwu Timur",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Kota Jayapura",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Tembrauw",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kaimana",
+//     "sedangK",
+//     "dangkal",
+//     "sedangJ",
+//     "Fealt"
+//   ],
+//   [
+//     "Kairatu",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Ruteng",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Timur Laut Jayapura",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Daya Pinrang",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Laut Wonosobo",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Cianjur",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Not"
+//   ],
+//   [
+//     "Barat Laut Pulau Numfor",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Tenggara Kaur",
+//     "sedangK",
+//     "sedangD",
+//     "sedangJ",
+//     "Not"
+//   ],
+//   [
+//     "Barat Daya Lombok Barat",
+//     "lemah",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ],
+//   [
+//     "Barat Daya Kab Garut",
+//     "sedangK",
+//     "dangkal",
+//     "dekat",
+//     "Fealt"
+//   ]
+// ]
+// let atribut1 = ['kekuatanGempa', 'kedalamanGempa', 'jarakGempa']
+// let faktor = [1, 2, 3]
+
+// let Decision = new DTC45(atribut1, dataGempa)
+
+// let tree = Decision.BuildTree(dataGempa, faktor, true)
+// console.log(JSON.stringify(tree));
+
 
 
 // let kasus = ["sunny", 'false', 'high']
