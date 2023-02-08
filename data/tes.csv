@@ -1,0 +1,15 @@
+Penghasilan, Pekerjaan, Hub, Status, LayakKredit
+rendah, ASN, buruk, kontak, tidaklayak
+tinggi, swasta, baik, HM, layak
+rendah, pengusaha, buruk, HM, tidaklayak
+rendah, pengusaha, baik, kontrak, layak
+sedang, swasta, baik, kontrak, tidaklayak
+rendah, swasta, baik, HM, layak
+rendah, ASN, buruk, HM, tidaklayak
+sedang, pengusaha, buruk, HM, layak
+sedang, swasta, baik, HM, layak
+sedang, pengusaha, buruk, kontrak, tidaklayak
+sedang, pengusaha, baik, kontrak, layak
+tinggi, ASN, buruk, HM, layak
+tinggi, pengusaha, buruk, kontrak, layak
+tinggi, ASN, baik, HM, layak

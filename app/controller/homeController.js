@@ -90,7 +90,7 @@ class homeController {
       res.redirect("/admin/login")
       return
     }
-    res.render("home", { title: "Home", css: "home.css", user, data: Earthquakes, js: "home.js" })
+    res.render("home", { title: "Home", css: "home.css", user, error: null, data: Earthquakes, js: "home.js" })
   }
 
   static async superAdmin(req, res) {

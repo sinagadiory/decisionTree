@@ -55,16 +55,16 @@ add.addEventListener("click", function (e) {
   <button id="show" class="btn btn-info text-white btn-sm" style="text-decoration: none;" href=""><i class="fa-solid fa-table"></i> Show Table</button>
     <form style="width: 80%;" method="POST" action="/add/gempa">
       <label id="lokasi" class="form-label" for="lokasi">Lokasi</label>
-      <input class="form-control" type="text" name="lokasi">
+      <input placeholder='format string' class="form-control" type="text" name="lokasi">
       <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
-      <input class="form-control" type="text" name="kekuatanGempa">
+      <input placeholder='format number' class="form-control" type="text" name="kekuatanGempa">
       <label id="kedalamanGempa" class="form-label" for="kedalamanGempa">Kedalaman Gempa</label>
-      <input class="form-control" type="text" name="kedalamanGempa">
+      <input placeholder='format number' class="form-control" type="text" name="kedalamanGempa">
       <label id="jarakGempa" class="form-label" for="jarakGempa">Jarak Pusat Gempa</label>
-      <input class="form-control" type="text" name="jarakGempa">
+      <input placeholder='format number' class="form-control" type="text" name="jarakGempa">
       <div class="input-group mt-3">
         <select name="dampakGempa" class="form-select" id="inputGroupSelect01">
-          <option hidden>Dampak Gempa</option>
+          <option value="Not Fealt" hidden>Dampak Gempa</option>
           <option value="Not Fealt">Not Fealt</option>
           <option style="background-color: rgb(41, 212, 41);" value="Fealt">Fealt</option>
           <option style="background-color:yellow;" value="Slight Demage">Slight Demage </option>

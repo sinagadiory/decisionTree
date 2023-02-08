@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/static/navbar.css">
 <nav style="background-color: rgb(244, 242, 249);" class="navbar navbar-expand-lg px-5">
   <div class="container-fluid ">
     <!-- <a class="navbar-brand" href="#">Gempa</a> -->
@@ -24,3 +25,32 @@
     </div>
   </div>
 </nav>
+<div class="container pt-4">
+  <div id="menu" class="mb-3 d-flex">
+    <div class="dropdown1">
+      <button class="dropdown1-btn">Data</button>
+      <div class="dropdown1-content">
+        <a href="/statistic">Statistik</a>
+        <a href="/visualcategory">Kategori</a>
+      </div>
+    </div>
+    <div class="dropdown1">
+      <button class="dropdown1-btn">Decision Tree</button>
+      <div class="dropdown1-content">
+        <a href="/decisiontree">Prediksi</a>
+        <a href="/tabledecisiontree">Table Decision Tree</a>
+        <a href="/evaluasidecisiontree/splitvalidation">Evaluasi(Split Validation)</a>
+        <a href="/evaluasidecisiontree/crossvalidation">Evaluasi(Cross Validation)</a>
+      </div>
+    </div>
+    <div class="dropdown1">
+      <button class="dropdown1-btn">KNN</button>
+      <div class="dropdown1-content">
+        <a href="/knn">Prediksi</a>
+        <a href="/tableknn">Table KNN</a>
+        <a href="/evaluasiknn/splitvalidation">Evaluasi(Split Validation)</a>
+        <a href="/evaluasiknn/crossvalidation">Evaluasi(Cross Validation)</a>
+      </div>
+    </div>
+  </div>
+</div>

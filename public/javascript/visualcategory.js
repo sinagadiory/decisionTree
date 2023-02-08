@@ -1,6 +1,7 @@
 const ctxKekuatanGempa = document.getElementById('myChartKekuatanGempa');
 const ctxKedalamanGempa = document.getElementById('myChartKedalamanGempa');
 const ctxJarakGempa = document.getElementById("myChartJarakGempa")
+const ctxDampakGempa = document.getElementById("myChartDampakGempa")
 const typeButton = document.querySelector(".type")
 
 const url = window.location.href.split("?")[1] ?? null
@@ -83,6 +84,26 @@ fetch('/gempa?type=Category&limit=90000')
       }
     }
 
+    //Dampak Gempa
+    let DampakGempa = []
+    let categoryDampakGempa = ['Not Felt', 'Felt', 'Slight Damage', 'Moderate Damage', 'Heavy Damage']
+    let JumlahDampakGempa = {}
+
+    for (let item in categoryDampakGempa) {
+      JumlahDampakGempa[categoryDampakGempa[item]] = 0
+    }
+
+    for (let d of data) {
+      DampakGempa.push(d['dampakGempa'])
+    }
+
+    for (let item in JumlahDampakGempa) {
+      for (let d of DampakGempa) {
+        if (item.trim() === d.trim()) {
+          JumlahDampakGempa[item] += 1
+        }
+      }
+    }
 
 
     //Tampilan
@@ -207,6 +228,47 @@ fetch('/gempa?type=Category&limit=90000')
           }
         }
       });
+
+      //Dampak Gempa
+      new Chart(ctxDampakGempa, {
+        type: 'bar',
+        data: {
+          labels: categoryDampakGempa,
+          datasets: [{
+            label: "Dampak Gempa",
+            data: JumlahDampakGempa,
+            backgroundColor: [
+              'rgba(101, 112, 112, 0.2)',
+              'rgba(11, 243, 34, 0.227)',
+              'rgba(239, 217, 19, 0.6)'
+            ],
+            borderColor: [
+              'rgba(101, 112, 112)',
+              'rgba(20, 212, 43)',
+              'rgba(239, 217, 19)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                // This more specific font property overrides the global property
+                font: {
+                  size: 15
+                }
+              },
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
     } else {
       //Kekuatan Gempa
       new Chart(ctxKekuatanGempa, {
@@ -299,6 +361,42 @@ fetch('/gempa?type=Category&limit=90000')
             title: {
               display: true,
               text: 'Jarak Pusat Gempa',
+              font: {
+                size: 15
+              }
+            }
+          }
+        }
+      });
+
+
+      //Dampak Gempa
+      new Chart(ctxDampakGempa, {
+        type: 'pie',
+        data: {
+          labels: categoryDampakGempa,
+          datasets: [{
+            label: 'Dampak Gempa',
+            data: [JumlahDampakGempa['Not Felt'], JumlahDampakGempa['Felt'], JumlahDampakGempa['Slight Damage'], JumlahDampakGempa['Moderate Damage'], JumlahDampakGempa['Heavy Damage']],
+            backgroundColor: [
+              'rgb(205, 210, 210)',
+              'rgb(41, 212, 41)',
+              'yellow',
+              'orange',
+              'red'
+            ],
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Dampak Gempa',
               font: {
                 size: 15
               }

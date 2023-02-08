@@ -2,6 +2,7 @@
 const { download, simpanganBaku } = require("../../helper")
 const { Earthquake } = require("../../models")
 const { Op } = require("sequelize")
+const { userService } = require("../service")
 let { KNN, splitValidation, crossValidation, DTC45, Clustering } = require("../../Logic/index")
 
 class earthquekeController {
@@ -77,7 +78,60 @@ class earthquekeController {
   }
 
   static async add(req, res) {
-    res.send(req.body)
+    let { type = "Not Category" } = req.query
+    let Earthquakes = await Earthquake.findAll({ limit: 7, order: [['id', 'ASC']] })
+    let data = []
+    for (let gempa of Earthquakes) {
+      data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+    }
+
+    let kekuatanGempaData = []
+    let kedalamanGempaData = []
+    let jarakGempaData = []
+
+    for (let d of data) {
+      kekuatanGempaData.push(+d[1])
+      kedalamanGempaData.push(+d[2])
+      jarakGempaData.push(+d[3])
+      d[1] = +d[1]
+      d[2] = +d[2]
+      d[3] = +d[3]
+    }
+    //Kategori
+    let kategoriKekuatan = ["lemah", 'sedang', 'kuat']
+    let kategoriKedalaman = ['dangkal', 'sedang', 'dalam']
+    let kategoriJarakGempa = ['dekat', 'sedang', 'jauh']
+
+    let cluster = new Clustering()
+    //Cluster
+    let clusterKekuatan = cluster.kMeans(kekuatanGempaData, kategoriKekuatan.length)
+    let clusterKedalaman = cluster.kMeans(kedalamanGempaData, kategoriKedalaman.length)
+    let clusterJarakGempa = cluster.kMeans(jarakGempaData, kategoriJarakGempa.length)
+
+    if (type === 'Category') {
+      for (let gempa of Earthquakes) {
+        gempa['kekuatanGempa'] = kategoriKekuatan[cluster.findCluster(gempa['kekuatanGempa'], clusterKekuatan.centroids)]
+        gempa['kedalamanGempa'] = kategoriKedalaman[cluster.findCluster(gempa['kedalamanGempa'], clusterKedalaman.centroids)]
+        gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
+      }
+    }
+    let user = await userService.findUser(req.user.email)
+    if (user.status !== 'active') {
+      res.clearCookie("access_token")
+      res.redirect("/admin/login")
+      return
+    }
+    const { lokasi, kekuatanGempa, kedalamanGempa, jarakGempa, dampakGempa } = req.body
+    try {
+      let response = await Earthquake.create({ lokasi, kekuatanGempa, kedalamanGempa, jarakGempa, dampakGempa })
+      if (response) {
+        res.render("home", { title: "Home", user, data: Earthquakes, css: "home.css", error: true, input: req.body, js: 'home.js' })
+      }
+    } catch (error) {
+      let err = error.errors[0].message
+      // res.render("home", { title: "Home", css: "home.css", user, data: Earthquakes, js: "home.js" })
+      res.render("home", { title: "Home", user, data: Earthquakes, css: "home.css", error: err, input: req.body, js: 'home.js' })
+    }
   }
 
   //KNN
@@ -404,13 +458,14 @@ class earthquekeController {
     let faktor = [1, 2, 3]
     const Decision = new DTC45(atribut, data)
     const tree = Decision.BuildTree(data, faktor, algo)
-
+    // return res.send(tree)
 
     for (let i = 0; i < Earthquakes.length; i++) {
       let kasus = [kategoriKekuatan[cluster.findCluster(Earthquakes[i]['kekuatanGempa'], clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(Earthquakes[i]['kedalamanGempa'], clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(Earthquakes[i]['jarakGempa'], clusterJarakGempa.centroids)]]
       let prediksi = Decision.predict(tree, kasus)
 
       Earthquakes[i] = { lokasi: Earthquakes[i].lokasi, kekuatanGempa: Earthquakes[i].kekuatanGempa, kedalamanGempa: Earthquakes[i].kedalamanGempa, jarakGempa: Earthquakes[i].jarakGempa, dampakGempa: Earthquakes[i].dampakGempa, prediksi }
+
     }
 
     let benar = 0
@@ -553,10 +608,11 @@ class earthquekeController {
     let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
     let faktor = [1, 2, 3]
     const Decision = new DTC45(atribut, data)
-    const tree = Decision.BuildTree(data, faktor, +req.body.algoritma)
+    const tree = Decision.BuildTree(data, faktor, true)
 
     //Predict
-    let result = Decision.predict(tree, [kategoriKekuatan[cluster.findCluster(req.body.kekuatanGempa, clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(req.body.kedalamanGempa, clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(req.body.jarakGempa, clusterJarakGempa.centroids)]])
+    let kasus = [kategoriKekuatan[cluster.findCluster(req.body.kekuatanGempa, clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(req.body.kedalamanGempa, clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(req.body.jarakGempa, clusterJarakGempa.centroids)]]
+    let result = Decision.predict(tree, kasus) ?? "Tidak dapat diklasifikasikan"
 
     setTimeout(() => {
       res.render("Earthquake/decisiontree", { title: "DecisionTree", css: "decisiontree.css", js: "decisionTree.js", data: req.body, result })

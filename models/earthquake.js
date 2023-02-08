@@ -59,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           args: true,
           msg: "Dampak gempa tidak boleh kosong",
+          isIn: [['Not Felt', 'Felt', 'Slight Damage', 'Moderate Damage', 'Heavy Damage']]
         },
       },
     }

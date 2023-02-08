@@ -5,7 +5,7 @@ const ss = require("simple-statistics")
 
 class visualController {
   static async barCategory(req, res) {
-    res.render("Visual/category", { title: "Visual Bar Char", js: "visualcategory.js", css: "visualcategory.css" })
+    res.render("Visual/category", { title: "Visual Category", js: "visualcategory.js", css: "visualcategory.css" })
   }
 
   static async statistic(req, res) {
@@ -19,6 +19,7 @@ class visualController {
       kedalamanGempa.push(d['kedalamanGempa'])
       jarakGempa.push(d['jarakGempa'])
     }
+    // return res.send({ nilai: ss.quantile(jarakGempa, 0.75) })
     res.render("Visual/statistic", { title: "Statistics", js: "statistic.js", css: "statistic.css", ss, kekuatanGempa, kedalamanGempa, jarakGempa })
   }
 }

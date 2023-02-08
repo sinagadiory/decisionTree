@@ -1,73 +1,93 @@
 ﻿No,Lokasi,Kekuatan Gempa(Mag),Kedalaman Gempa(Km),Jarak Pusat Gempa(Km),Dampak Gempa(MMI)
-1,Barat Laut Kab Cianjur,2.1,10,5,Not Fealt
-2,Tenggara Pesisir Barat,4.7,46,55,Not Fealt
-3,Barat Laut Kab Cianjur,4.3,10,7,Fealt
-4,Timur Laut Alor,4,10,45,Fealt
-5,Timur Laut Jayapura,4.9,10,13,Fealt
-6,Barat Daya Kab Purwakarta,3.6,7,22,Fealt
-7,Tenggara Meulaboh,4.8,1,91,Not Fealt
-8,Barat Laut Kab Cianjur,3.4,4,8,Fealt
-9,Timur Laut Kota Jayapura,4,10,36,Not Fealt
-10,Timur Laut Kota Jayapura,3.4,10,18,Not Fealt
-11,Barat Daya Kota Jayapura,3.9,21,8,Not Fealt
-12,Barat Laut Wonosobo,2.3,8,22,Not Fealt
-13,Timur Laut Pamala,3.2,7,4,Fealt
-14,Timur Laut Kota Jayapura,4,6,39,Fealt
-15,Timur Laut Kota Jayapura,3.9,10,32,Fealt
-16,Tenggara Pacitan,5.4,10,306,Not Fealt
-17,Barat Laut Jayapura,4.4,22,78,Fealt
-18,Tenggara Melonguane,7.1,64,141,Fealt
-19,Tenggara Bone Bolango,6.3,138,69,Fealt
-20,Timur Laut Kota Jayapura,3.4,10,18,Not Fealt
-21,Barat Daya Kab Cianjur,2.4,10,4,Fealt
-22,Barat Laut Kab Cianjur,2.6,10,6,Fealt
-23,Timur Laut Ruteng,4.7,30,27,Fealt
-24,Barat Laut Kab Jayapura,4.1,13,20,Not Fealt
-25,Tenggara Kab Pekalongan,2.3,21,24,Fealt
-26,Tenggara Kab Pekalongan,2.2,17,24,Fealt
-27,Tenggara Kab Pekalongan,1.9,10,21,Fealt
-28,Timur Laut Pulau Sipora,4.4,10,71,Not Fealt
-29,Barat Daya Kab Malang,5.1,17,125,Fealt
-30,Timur Laut Jayapura,3.8,10,14,Not Fealt
-31,Barat Laut Kab Cianjur,5.6,10,9.65,Slight Demage
-32,Barat Laut Maluku,7.6,151.2,131,Fealt
-33,Tenggara Pacitan,5.4,59,81,Fealt
-34,Kab Karangasem,5.2,10,31.69,Fealt
-35,Kota Sukabumi,5.8,104,22.5,Fealt
-36,Barat Laut Kab Garut,6.4,118,26.7,Fealt
-37,Selatan Kota Garut,5.1,70,89,Fealt
-38,Barat Daya Kota Bengkulu,6.8,10,215.8,Fealt
-39,Barat Daya Kab Garut,5.3,10,122.5,Fealt
-40,Barat Laut Kab Tojo Una-una,5.2,10,13,Fealt
-41,Tenggara Kota Lahat,4.2,1,19.8,Fealt
-42,Barat Daya Kota Muara Enim,4,1,18,Fealt
-43,Selatan Kab Lebak,5.5,12,15.77,Fealt
-44,Timur Laut Kab Sumedang,2.7,16,2.3,Fealt
-45,Barat Laut Kab Tapanuli Utara,6,10,15,Fealt
-46,Barat Daya Kab Aceh Barat,6.2,22,44.77,Fealt
-47,Barat Laut Kepulauan Mentawai,6.1,10,150.7,Fealt
-48,Timur Laut Membaromo Raya,6.2,16,40.1,Fealt
-49,Kab Kepulauan Mentawai,6.4,10,160,Fealt
-50,"Kab Kaur, Prov Bengkulu",6.5,12,66.3,Fealt
-51,Tenggara Kab Aceh ,4.3,24,17,Not Fealt
-52,Barat daya gunung Kidul,2.9,8,14,Not Fealt
-53,Kab Bandung,4,5,23,Fealt
-54,Kab Cianjur,3.7,10,21,Fealt
-55,Barat daya Daruba,5.6,136,13,Fealt
-56,Timur laut Tabelo,2.4,9,8,Fealt
-57,Barat Laut Wonosobo,2.3,10,17,Not Fealt
-58,Timur Laut Wonosobo,2.6,6,11,Fealt
-59,Barat Daya Luwu Timur,3.5,10,13,Fealt
-60,Timur Laut Kota Jayapura,3.5,10,13,Fealt
-61,Timur Laut Tembrauw,3.6,7,40,Fealt
-62,Barat Daya Kaimana,4.1,10,75,Fealt
-63,Kairatu,3.2,3,1,Fealt
-64,Timur Laut Ruteng,3.5,10,28,Fealt
-65,Timur Laut Jayapura,3,7,20,Not Fealt
-66,Barat Daya Pinrang,4.1,6,38,Fealt
-68,Barat Laut Wonosobo,1.8,10,15,Not Fealt
-69,Barat Laut Cianjur,2.7,10,5,Not Fealt
-70,Barat Laut Pulau Numfor,4.4,10,29,Fealt
-71,Tenggara Kaur,4.6,39,56,Not Fealt
-72,Barat Daya Lombok Barat,2.6,12,15,Fealt
-73,Barat Daya Kab Garut,4.3,3,19,Fealt
+1,Barat Laut Kab Cianjur,2.1,10,5,Not Felt
+2,Tenggara Pesisir Barat,4.7,46,55,Not Felt
+3,Barat Laut Kab Cianjur,4.3,10,7,Felt
+4,Timur Laut Alor,4,10,45,Felt
+5,Timur Laut Jayapura,4.9,10,13,Felt
+6,Barat Daya Kab Purwakarta,3.6,7,22,Felt
+7,Tenggara Meulaboh,4.8,1,91,Not Felt
+8,Barat Laut Kab Cianjur,3.4,4,8,Felt
+9,Timur Laut Kota Jayapura,4,10,36,Not Felt
+10,Timur Laut Kota Jayapura,3.4,10,18,Not Felt
+11,Barat Daya Kota Jayapura,3.9,21,8,Not Felt
+12,Barat Laut Wonosobo,2.3,8,22,Not Felt
+13,Timur Laut Pamala,3.2,7,4,Felt
+14,Timur Laut Kota Jayapura,4,6,39,Felt
+15,Timur Laut Kota Jayapura,3.9,10,32,Felt
+16,Tenggara Pacitan,5.4,10,306,Not Felt
+17,Barat Laut Jayapura,4.4,22,78,Felt
+18,Tenggara Melonguane,7.1,64,141,Felt
+19,Tenggara Bone Bolango,6.3,138,69,Felt
+20,Timur Laut Kota Jayapura,3.4,10,18,Not Felt
+21,Barat Daya Kab Cianjur,2.4,10,4,Felt
+22,Barat Laut Kab Cianjur,2.6,10,6,Felt
+23,Timur Laut Ruteng,4.7,30,27,Felt
+24,Barat Laut Kab Jayapura,4.1,13,20,Not Felt
+25,Tenggara Kab Pekalongan,2.3,21,24,Felt
+26,Tenggara Kab Pekalongan,2.2,17,24,Felt
+27,Tenggara Kab Pekalongan,1.9,10,21,Felt
+28,Timur Laut Pulau Sipora,4.4,10,71,Not Felt
+29,Barat Daya Kab Malang,5.1,17,125,Felt
+30,Timur Laut Jayapura,3.8,10,14,Not Felt
+31,Barat Laut Kab Cianjur,5.6,10,9.65,Slight Damage
+32,Barat Laut Maluku,7.6,151.2,131,Felt
+33,Tenggara Pacitan,5.4,59,81,Felt
+34,Kab Karangasem,5.2,10,31.69,Felt
+35,Kota Sukabumi,5.8,104,22.5,Felt
+36,Barat Laut Kab Garut,6.4,118,26.7,Felt
+37,Selatan Kota Garut,5.1,70,89,Felt
+38,Barat Daya Kota Bengkulu,6.8,10,215.8,Felt
+39,Barat Daya Kab Garut,5.3,10,122.5,Felt
+40,Barat Laut Kab Tojo Una-una,5.2,10,13,Felt
+41,Tenggara Kota Lahat,4.2,1,19.8,Felt
+42,Barat Daya Kota Muara Enim,4,1,18,Felt
+43,Selatan Kab Lebak,5.5,12,15.77,Felt
+44,Timur Laut Kab Sumedang,2.7,16,2.3,Felt
+45,Barat Laut Kab Tapanuli Utara,6,10,15,Felt
+46,Barat Daya Kab Aceh Barat,6.2,22,44.77,Felt
+47,Barat Laut Kepulauan Mentawai,6.1,10,150.7,Felt
+48,Timur Laut Membaromo Raya,6.2,16,40.1,Felt
+49,Kab Kepulauan Mentawai,6.4,10,160,Felt
+50,"Kab Kaur, Prov Bengkulu",6.5,12,66.3,Felt
+51,Tenggara Kab Aceh ,4.3,24,17,Not Felt
+52,Barat daya gunung Kidul,2.9,8,14,Not Felt
+53,Kab Bandung,4,5,23,Felt
+54,Kab Cianjur,3.7,10,21,Felt
+55,Barat daya Daruba,5.6,136,13,Felt
+56,Timur laut Tabelo,2.4,9,8,Felt
+57,Barat Laut Wonosobo,2.3,10,17,Not Felt
+58,Timur Laut Wonosobo,2.6,6,11,Felt
+59,Barat Daya Luwu Timur,3.5,10,13,Felt
+60,Timur Laut Kota Jayapura,3.5,10,13,Felt
+61,Timur Laut Tembrauw,3.6,7,40,Felt
+62,Barat Daya Kaimana,4.1,10,75,Felt
+63,Kairatu,3.2,3,1,Felt
+64,Timur Laut Ruteng,3.5,10,28,Felt
+65,Timur Laut Jayapura,3,7,20,Not Felt
+66,Barat Daya Pinrang,4.1,6,38,Felt
+68,Barat Laut Wonosobo,1.8,10,15,Not Felt
+69,Barat Laut Cianjur,2.7,10,5,Not Felt
+70,Barat Laut Pulau Numfor,4.4,10,29,Felt
+71,Tenggara Kaur,4.6,39,56,Not Felt
+72,Barat Daya Lombok Barat,2.6,12,15,Felt
+73,Barat Daya Kab Garut,4.3,3,19,Felt
+74,Barat Laut Jayapura,2.9,8,6,Not Felt
+75,Barat Laut Jayapura,3.4,7,13,Felt
+76,Barat Laut Jayapura,3,10,8,Not Felt
+77,Barat Laut Jayapura,3.4,10,11,Felt
+78,Barat Laut Jayapura,3.2,10,20,Not Felt
+79,Barat Laut Jayapura,2.9,10,20,Not Felt
+80,Barat Laut Jayapura,2.9,10,9,Not Felt
+81,Barat Laut Wonosobo,2.4,15,16,Not Felt
+82,Tenggara Lombok Utara,3.5,13,7,Felt
+83,Timur Laut Jembrana,3.7,10,28,Not Felt
+84,Barat Laut Jayapura,4.7,10,4,Felt
+85,Barat Laut Jayapura,3.4,10,5,Felt
+86,Barat Laut Jayapura,3.3,8,10,Not Felt
+87,Barat Laut Jayapura,2.9,8,7,Not Felt
+88,Barat Laut Jayapura,4.4,10,10,Felt
+89,Barat Laut Jayapura,3.4,9,15,Not Felt
+90,Barat Laut Jayapura,3.1,6,5,Not Felt
+91,Barat Laut Jayapura,4.3,10,9,Felt
+92,Barat Laut Jayapura,3.6,10,6,Felt
+93,Barat Laut Jayapura,3.3,7,8,Not Felt

@@ -1,5 +1,5 @@
 'use strict';
-const { hash } = require("./../helper");
+const { hash } = require("../helper");
 module.exports = {
   async up(queryInterface, Sequelize) {
     const timeNow = new Date();

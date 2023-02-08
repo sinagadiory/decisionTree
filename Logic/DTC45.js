@@ -1,45 +1,16 @@
 
-// let data = [
-//   ['1', 'Cerah', 'Panas', 'Tidak'],
-//   ['2', 'Cerah', 'Panas', 'Tidak'],
-//   ['3', 'Berawan', 'Panas', 'Ya'],
-//   ['4', 'Hujan', 'Sejuk', 'Ya'],
-//   ['5', 'Hujan', 'Dingin', 'Ya'],
-//   ['6', 'Hujan', 'Dingin', 'Ya'],
-//   ['7', 'Berawan', 'Dingin', 'Tidak'],
-//   ['8', 'Cerah', 'Sejuk', 'Ya'],
-//   ['9', 'Cerah', 'Dingin', 'Ya'],
-//   ['10', 'Hujan', 'Sejuk', 'Ya']
-// ]
-// let data1 = [
-//   ['Cerah', 'Panas', 'Tidak'],
-//   ['Cerah', 'Panas', 'Tidak'],
-//   ['Berawan', 'Panas', 'Ya'],
-//   ['Hujan', 'Sejuk', 'Ya'],
-//   ['Hujan', 'Dingin', 'Ya'],
-//   ['Hujan', 'Dingin', 'Ya'],
-//   ['Berawan', 'Dingin', 'Tidak'],
-//   ['Cerah', 'Sejuk', 'Ya'],
-//   ['Cerah', 'Dingin', 'Ya'],
-//   ['Hujan', 'Sejuk', 'Ya']
-// ]
-
-// 'use strict';
-// const csv = require('async-csv');
-// const fs = require('fs').promises;
-
-// async function ReadData() {
-//   const csvString = await fs.readFile('./data/DataGempa.csv', 'utf-8');
-
-//   const rows = await csv.parse(csvString);
-//   const DataGempa = rows.slice(1)
-//   DataGempa.map((d) => {
-//     d[2] = +d[2]
-//     d[3] = +d[3]
-//     d[4] = +d[4]
-//   })
-//   return DataGempa
-// }
+let data = [
+  ['1', 'Cerah', 'Panas', 'Tidak'],
+  ['2', 'Cerah', 'Panas', 'Tidak'],
+  ['3', 'Berawan', 'Panas', 'Ya'],
+  ['4', 'Hujan', 'Sejuk', 'Ya'],
+  ['5', 'Hujan', 'Dingin', 'Ya'],
+  ['6', 'Hujan', 'Dingin', 'Ya'],
+  ['7', 'Berawan', 'Dingin', 'Tidak'],
+  ['8', 'Cerah', 'Sejuk', 'Ya'],
+  ['9', 'Cerah', 'Dingin', 'Ya'],
+  ['10', 'Hujan', 'Sejuk', 'Ya']
+]
 
 class DTC45 {
 
@@ -109,7 +80,10 @@ class DTC45 {
   }
 
   GainRatio(data, index) {
-    if (this.InformationGain(data, index) / this.SplitInfo(data, index) != "number") {
+    // if (typeof (this.InformationGain(data, index) / this.SplitInfo(data, index)) !== "number") {
+    //   return 0
+    // }
+    if (this.SplitInfo(data, index) === 0) {
       return 0
     }
     return this.InformationGain(data, index) / this.SplitInfo(data, index)
@@ -119,20 +93,27 @@ class DTC45 {
     let dataPartisi = this.SplitPartisi(data, index)
     let result = 0
     for (let item in dataPartisi) {
+      if (dataPartisi[item].length === 0) {
+        result = 0
+        break
+      }
       result += -1 * (dataPartisi[item].length / data.length) * (Math.log2(dataPartisi[item].length / data.length))
     }
+    // console.log(result);
     return result
   }
 
   SplitPartisi(data, index) {
-    let result = []
-    data.map((d) => {
-      result.push(d[index])
-    })
+    // let result = []
+    let result = this.findValueAtribut(this.dataTraning, index)
+    // data.map((d) => {
+    //   result.push(d[index])
+    // })
     let partisi = {}
     result.map((r) => {
       partisi[r] = []
     })
+
     data.map((d) => {
       for (let item in partisi) {
         if (item === d[index]) {
@@ -179,27 +160,42 @@ class DTC45 {
     return result ? Class : result
   }
 
+  MajorityClass(data) {
+    let result = {}
+    this.kelas.map((k) => {
+      result[k] = 0
+    })
+    data.map((d) => {
+      result[d[d.length - 1]] += 1
+    })
+    let max = -Infinity
+    let hasil = null
+
+    for (let item in result) {
+      if (result[item] > max) {
+        max = result[item]
+        hasil = item;
+      }
+    }
+    return hasil
+  }
+
+  findValueAtribut(data, index) {
+    let result = []
+    data.map((d) => {
+      if (!result.find((r) => (r == d[index]))) {
+        result.push(d[index].trim())
+      }
+    })
+    return result
+  }
+
+
   BuildTree(data, faktor, algoC45 = true) {
     let end = this.endClass(data)
     if (end) return end
     if (faktor.length === 0) {
-      let result = {}
-      this.kelas.map((k) => {
-        result[k] = 0
-      })
-      data.map((d) => {
-        result[d[d.length - 1]] += 1
-      })
-      let max = -Infinity
-      let hasil = null
-
-      for (let item in result) {
-        if (result[item] > max) {
-          max = result[item]
-          hasil = item;
-        }
-      }
-      return hasil
+      return this.MajorityClass(data)
     }
 
     let best = this.findBestAtribut(data, faktor, algoC45)
@@ -209,6 +205,10 @@ class DTC45 {
     tree.child = {}
     let dataPartisi = this.SplitPartisi(data, best.index)
     for (let item in dataPartisi) {
+      if (dataPartisi[item].length === 0) {
+        tree.child[item] = this.MajorityClass(data)
+        continue
+      }
       let nextFaktor = faktor.filter((f) => f !== best.index)
       tree.child[item] = this.BuildTree(dataPartisi[item], nextFaktor, algoC45)
     }
@@ -230,563 +230,47 @@ class DTC45 {
 
 }
 
-// let atribut = ["Cuaca", "Suhu"]
+let data1 = [
+  [1, 'rendah', 'ASN', 'buruk', 'kontrak', 'tidak layak'],
+  [2, 'tinggi', 'swasta', 'baik', 'HM', 'layak'],
+  [3, 'rendah', 'pengusaha', 'buruk', 'HM', 'tidak layak'],
+  [4, 'rendah', 'pengusaha', 'baik', 'kontrak', 'layak'],
+  [5, 'sedang', 'swasta', 'baik', 'kontrak', 'tidak layak'],
+  [6, 'rendah', 'swasta', 'baik', 'HM', 'layak'],
+  [7, 'rendah', 'ASN', 'buruk', 'HM', 'tidak layak'],
+  [8, 'sedang', 'pengusaha', 'buruk', 'HM', 'layak'],
+  [9, 'sedang', 'swasta', 'baik', 'HM', 'layak'],
+  [10, 'sedang', 'pengusaha', 'buruk', 'kontrak', 'tidak layak'],
+  [11, 'sedang', 'pengusaha', 'baik', 'kontrak', 'layak'],
+  [12, 'tinggi', 'ASN', 'buruk', 'HM', 'layak'],
+  [13, 'tinggi', 'pengusaha', 'buruk', 'kontrak', 'layak'],
+  [14, 'tinggi', 'ASN', 'baik', 'HM', 'layak']
+]
+
+
+// let atribut = ['Cuaca', 'Suhu']
+// let faktor = [1, 2]
+
 // let Decision = new DTC45(atribut, data)
-// let faktor1 = [1, 2]
-// let tree = Decision.BuildTree(data, faktor1, false)
-// console.log(JSON.stringify(tree));
-// console.log(Decision.predict(tree, ["Cerah", "Panas"]));
-
-// let dataSuny = [
-//   [1, "sunny", "false", "high", "no"],
-//   [2, "sunny", "true", "high", "no"],
-//   [3, "sunny", "false", "high", "no"],
-//   [4, "sunny", "false", "medium", "yes"],
-//   [5, "sunny", "true", "medium", "yes"],
-//   [6, "overcast", "false", "medium", "yes"],
-//   [7, "overcast", "true", "medium", "yes"],
-//   [8, "overcast", "true", "high", "yes"],
-//   [9, "overcast", "false", "medium", "yes"],
-//   [10, "rain", "false", "high", "yes"],
-//   [11, "rain", "false", "medium", "yes"],
-//   [12, "rain", "true", "medium", "no"],
-//   [13, "rain", "false", "medium", "yes"],
-//   [14, "rain", "true", "medium", "no"],
-//   [15, "rain", "false", "medium", "yes"],
-//   [16, "sunny", "true", "medium", "yes"],
-//   [17, "rain", "false", "medium", "yes"],
-//   [18, "rain", "true", "high", "yes"]
-// ]
-// let atribut1 = ['outlook', 'windy', 'humadity']
-// let faktor = [1, 2, 3]
-
-// let Decision = new DTC45(atribut1, dataSuny)
-
-// let tree = Decision.BuildTree(dataSuny, faktor, true)
+// let tree = Decision.BuildTree(data, faktor)
 // console.log(JSON.stringify(tree));
 
+// let atribut = ['Penghasilan', 'Pekerjaan', 'Hub Sosial', 'Status Rumah']
+// let Decision = new DTC45(atribut, data1)
+// let faktor1 = [1, 2, 3, 4]
+// let tree = Decision.BuildTree(data1, faktor1)
 
-// let dataGempa = [
-//   [
-//     "Barat Laut Kab Cianjur  ",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Tenggara Pesisir Barat",
-//     "sedangK",
-//     "sedangD",
-//     "sedangJ",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Kab Cianjur",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Alor",
-//     "sedangK",
-//     "dangkal",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kab Purwakarta",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Meulaboh",
-//     "sedangK",
-//     "dangkal",
-//     "sedangJ",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Kab Cianjur",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Kota Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Timur Laut Kota Jayapura",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Daya Kota Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Wonosobo",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Timur Laut Pamala",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Kota Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Kota Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Pacitan",
-//     "kuat",
-//     "dangkal",
-//     "jauh",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Melonguane",
-//     "kuat",
-//     "sedangD",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Bone Bolango",
-//     "kuat",
-//     "dalam",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Kota Jayapura",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Daya Kab Cianjur",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Kab Cianjur",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Ruteng",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Kab Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Tenggara Kab Pekalongan",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Kab Pekalongan",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Kab Pekalongan",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Pulau Sipora",
-//     "sedangK",
-//     "dangkal",
-//     "sedangJ",
-//     "Not"
-//   ],
-//   [
-//     "Barat Daya Kab Malang",
-//     "sedangK",
-//     "dangkal",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Jayapura",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Kab Cianjur",
-//     "kuat",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Maluku",
-//     "kuat",
-//     "dalam",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Pacitan",
-//     "kuat",
-//     "sedangD",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Kab Karangasem",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Kota Sukabumi",
-//     "kuat",
-//     "dalam",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Kab Garut",
-//     "kuat",
-//     "dalam",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Selatan Kota Garut",
-//     "sedangK",
-//     "sedangD",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kota Bengkulu",
-//     "kuat",
-//     "dangkal",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kab Garut",
-//     "kuat",
-//     "dangkal",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Kab Tojo Una-una",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Kota Lahat",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kota Muara Enim",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Selatan Kab Lebak",
-//     "kuat",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Kab Sumedang",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Kab Tapanuli Utara",
-//     "kuat",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kab Aceh Barat",
-//     "kuat",
-//     "dangkal",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Kepulauan Mentawai",
-//     "kuat",
-//     "dangkal",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Membaromo Raya",
-//     "kuat",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Kab Kepulauan Mentawai",
-//     "kuat",
-//     "dangkal",
-//     "jauh",
-//     "Fealt"
-//   ],
-//   [
-//     "Kab Kaur, Prov Bengkulu",
-//     "kuat",
-//     "dangkal",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Kab Aceh ",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat daya gunung Kidul",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Kab Bandung",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Kab Cianjur",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat daya Daruba",
-//     "kuat",
-//     "dalam",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur laut Tabelo",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Wonosobo",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Timur Laut Wonosobo",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Luwu Timur",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Kota Jayapura",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Tembrauw",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kaimana",
-//     "sedangK",
-//     "dangkal",
-//     "sedangJ",
-//     "Fealt"
-//   ],
-//   [
-//     "Kairatu",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Ruteng",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Timur Laut Jayapura",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Daya Pinrang",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Laut Wonosobo",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Cianjur",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Not"
-//   ],
-//   [
-//     "Barat Laut Pulau Numfor",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Tenggara Kaur",
-//     "sedangK",
-//     "sedangD",
-//     "sedangJ",
-//     "Not"
-//   ],
-//   [
-//     "Barat Daya Lombok Barat",
-//     "lemah",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ],
-//   [
-//     "Barat Daya Kab Garut",
-//     "sedangK",
-//     "dangkal",
-//     "dekat",
-//     "Fealt"
-//   ]
-// ]
-// let atribut1 = ['kekuatanGempa', 'kedalamanGempa', 'jarakGempa']
-// let faktor = [1, 2, 3]
-
-// let Decision = new DTC45(atribut1, dataGempa)
-
-// let tree = Decision.BuildTree(dataGempa, faktor, true)
 // console.log(JSON.stringify(tree));
 
+// let Penghasilan = Decision.SplitPartisi(data1, 1)
+// let PenghasilanSedang = Penghasilan.sedang
+
+// let StatusRumah = Decision.SplitPartisi(PenghasilanSedang, 4)
 
 
-// let kasus = ["sunny", 'false', 'high']
+// let StatusRumahKontrak = StatusRumah.kontrak
+// console.log(StatusRumahKontrak);
 
-// let result = Decision.predict(tree, kasus)
-
-// console.log(JSON.stringify(result));
-
+// console.log(Decision.GainRatio(StatusRumahKontrak, 3));
 
 module.exports = DTC45

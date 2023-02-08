@@ -18,7 +18,7 @@ router.get("/evaluasidecisiontree/splitvalidation", earthquekeController.splitVa
 router.get("/evaluasidecisiontree/crossvalidation", earthquekeController.evaluasiModelCrossValidationDT)
 
 //post
-router.post("/add/gempa", earthquekeController.add)
+router.post("/add/gempa", authMiddleware, earthquekeController.add)
 router.post("/knn", earthquekeController.postKnn)
 router.post("/update/gempa/:id", authMiddleware, earthquekeController.postUpdate)
 router.post("/decisiontree", earthquekeController.postDecisionTree)
