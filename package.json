@@ -6,7 +6,11 @@
   "typings": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon bin/www"
+    "dev": "nodemon bin/www",
+    "build": "npx sequelize db:migrate",
+    "seed": "npx sequelize db:seed:all",
+    "migrate:undo": "npx sequelize db:migrate:undo:all",
+    "start": "node bin/www"
   },
   "keywords": [],
   "author": "",
