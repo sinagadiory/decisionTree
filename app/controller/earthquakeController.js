@@ -3,7 +3,7 @@ const { download, simpanganBaku } = require("../../helper")
 const { Earthquake } = require("../../models")
 const { Op } = require("sequelize")
 const { userService } = require("../service")
-let { KNN, splitValidation, crossValidation, DTC45, Clustering } = require("../../Logic/index")
+let { KNN, splitValidation, crossValidation, DTC45, Clustering, Matrix } = require("../../Logic/index")
 
 class earthquekeController {
 
@@ -200,6 +200,7 @@ class earthquekeController {
 
   //Decision Tree
   static async splitValidationDT(req, res) {
+
     let rasio = !req.query.rasio ? 8 : +req.query.rasio
     let algo = !req.query.algo ? true : (req.query.algo === 'id3' ? false : true)
 
@@ -208,12 +209,15 @@ class earthquekeController {
     let { dataTraning, dataTesting } = split.runSplitValidation(Earthquakes, rasio)
 
     let data = []
+
     for (let gempa of dataTraning) {
       data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
     }
     let dataTest = []
+    let dataTest1 = [] // for confusion matrix
 
     for (let gempa of dataTesting) {
+      dataTest1.push([gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
       dataTest.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
     }
     let kekuatanGempa = []
@@ -243,12 +247,20 @@ class earthquekeController {
       d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
       d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
     }
+    for (let d of dataTest1) {
+      d[0] = kategoriKekuatan[cluster.findCluster(d[0], clusterKekuatan.centroids)]
+      d[1] = kategoriKedalaman[cluster.findCluster(d[1], clusterKedalaman.centroids)]
+      d[2] = kategoriJarakGempa[cluster.findCluster(d[2], clusterJarakGempa.centroids)]
+    }
 
     //Algoritma Decision Tree
     let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
     let faktor = [1, 2, 3]
     const Decision = new DTC45(atribut, data)
     const tree = Decision.BuildTree(data, faktor, algo)
+    const Model = (kasus) => { return Decision.predict(tree, kasus) }
+
+    const matrix = new Matrix(dataTest1, Model)
 
     for (let i = 0; i < dataTest.length; i++) {
       let kasus = [kategoriKekuatan[cluster.findCluster(dataTesting[i]['kekuatanGempa'], clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(dataTesting[i]['kedalamanGempa'], clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(dataTesting[i]['jarakGempa'], clusterJarakGempa.centroids)]]
@@ -257,7 +269,6 @@ class earthquekeController {
 
       dataTesting[i] = { lokasi: dataTesting[i].lokasi, kekuatanGempa: dataTesting[i].kekuatanGempa, kedalamanGempa: dataTesting[i].kedalamanGempa, jarakGempa: dataTesting[i].jarakGempa, dampakGempa: dataTesting[i].dampakGempa, prediksi }
     }
-
 
     let benar = 0
     let salah = 0
@@ -270,7 +281,7 @@ class earthquekeController {
     })
 
 
-    res.render("Earthquake/splitValidationDT", { title: "Split Validation Decision Tree", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2) })
+    res.render("Earthquake/splitValidationDT", { title: "Split Validation Decision Tree", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix })
   }
 
   //Decision Tree
@@ -603,13 +614,11 @@ class earthquekeController {
       d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
       d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
     }
-
     //Algoritma Decision Tree
     let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
     let faktor = [1, 2, 3]
     const Decision = new DTC45(atribut, data)
     const tree = Decision.BuildTree(data, faktor, true)
-
     //Predict
     let kasus = [kategoriKekuatan[cluster.findCluster(req.body.kekuatanGempa, clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(req.body.kedalamanGempa, clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(req.body.jarakGempa, clusterJarakGempa.centroids)]]
     let result = Decision.predict(tree, kasus) ?? "Tidak dapat diklasifikasikan"

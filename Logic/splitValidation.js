@@ -12,7 +12,7 @@ class splitValidation {
   }
 
   systematicSample(data, n) {
-    data.sort((a, b) => (a - b))
+    // data.sort((a, b) => (a - b))
 
     let k = Math.floor(data.length / n)
     let result = []
