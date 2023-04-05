@@ -1,0 +1,59 @@
+<%- include("../partials/header.ejs")  %> 
+<%- include("../partials/navbar.ejs")  %> 
+
+<div class="container my-5">
+  <div class="row my-3 ">
+    <h4>Perbandingan Performa Split Validation</h4>
+    <table class="table table-striped table-bordered table-hover w-75 m-auto">
+      <thead  style="background-color: black;" class="text-center text-white">
+        <tr>
+          <th scope="col">Split</th>
+          <th scope="col">Accuracy</th>
+          <th scope="col">Precision</th>
+          <th scope="col">Recall</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr>
+          <th scope="row">6:4</th>
+          <td id="acc6">Mark</td>
+          <td id="pre6">Otto</td>
+          <td id="rec6">@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">7:3</th>
+          <td id="acc7">Mark</td>
+          <td id="pre7">Otto</td>
+          <td id="rec7">@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">8:2</th>
+          <td id="acc8">Mark</td>
+          <td id="pre8">Otto</td>
+          <td id="rec8">@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">9:1</th>
+          <td id="acc9">Mark</td>
+          <td id="pre9">Otto</td>
+          <td id="rec9">@mdo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <div id="tes"></div>
+      <canvas id="myChartAccuracy"></canvas>
+    </div>
+    <div class="col-lg-6">
+      <canvas id="myChartPrecision"></canvas>
+    </div>
+    <div class="col-lg-6 mt-4">
+      <canvas id="myChartRecall"></canvas>
+    </div>
+  </div>
+</div>
+
+
+<%- include("../partials/footer.ejs")  %> 

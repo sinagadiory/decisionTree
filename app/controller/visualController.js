@@ -22,6 +22,17 @@ class visualController {
     // return res.send({ nilai: ss.quantile(jarakGempa, 0.75) })
     res.render("Visual/statistic", { title: "Statistics", js: "statistic.js", css: "statistic.css", ss, kekuatanGempa, kedalamanGempa, jarakGempa })
   }
+
+  static async VisualConfusionMatrix(req, res) {
+
+
+    res.render("Visual/Matrix", { title: "Compare Model Split Validation", js: "matrix.js", css: "visualcategory.css" })
+  }
+
+  static async VisualConfusionMatrixCV(req, res) {
+    let k = !req.query.k ? 10 : req.query.k
+    res.render("Visual/MatrixCV", { title: "Compare Model Cross Validation", js: "matrixCV.js", css: "visualcategory.css", panjang: k })
+  }
 }
 
 module.exports = visualController

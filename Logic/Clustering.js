@@ -6,6 +6,10 @@ let Mathseedrandom = function (seed) {
 
 class Clustering {
 
+  constructor(sys = true) {
+    this.sys = sys
+  }
+
   EuclideanDistance(x, y) {
     let result = 0
     for (let i = 0; i < x.length; i++) {
@@ -36,7 +40,13 @@ class Clustering {
 
     let j = 0
     while (j < n) {
-      result.push(data[i])
+      if (!result.find((r) => (r == data[i]))) {
+        result.push(data[i])
+      } else {
+        let random = (this.findCenterRandom(data))
+        if (!result.find((r) => (r == random))) { result.push(random) }
+        else continue
+      }
       i += k
       j++
     }
@@ -67,7 +77,7 @@ class Clustering {
     return sum === arr1.length ? true : false
   }
 
-  kMeans(data, k, systematicSample = false) {
+  kMeans(data, k) {
     let clusters = []
     let centroids = []
     let check = []
@@ -76,7 +86,7 @@ class Clustering {
 
     let i = 0
     while (i < k) {
-      if (systematicSample) {
+      if (this.sys) {
         let sample = this.systematicSample(data, k)
         for (let s of sample) {
           centroids.push(s)
@@ -99,6 +109,7 @@ class Clustering {
     }
 
     while (true) {
+
       for (let j = 0; j < centroids.length; j++) {
         check[j] = clusters[j]
         clusters[j] = []
@@ -136,16 +147,16 @@ class Clustering {
 }
 
 
-// let clustering = new Clustering()
+// let clustering = new Clustering(true)
 
 
 
-// let result = clustering.kMeans([22, 1, 2, 3, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 3, true)
 
-// console.log(result);
+
+
 
 // console.log("-------------------------------");
-// console.log(clustering.kMeans([22, 1, 2, 3, 4, 5, 2, 12, 90, 100, 23, 54, 65, 34, 56], 3, false));
+// console.log(clustering.kMeans([1, 7, 10, 10, 10, 10, 46], 3));
 
 // console.log(clustering.findCluster(92, result.centroids));
 

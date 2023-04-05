@@ -4,6 +4,7 @@ const { Earthquake } = require("../../models")
 const { Op } = require("sequelize")
 const { userService } = require("../service")
 let { KNN, splitValidation, crossValidation, DTC45, Clustering, Matrix } = require("../../Logic/index")
+const ss = require("simple-statistics")
 
 class earthquekeController {
 
@@ -281,7 +282,7 @@ class earthquekeController {
     })
 
 
-    res.render("Earthquake/splitValidationDT", { title: "Split Validation Decision Tree", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix })
+    res.render("Earthquake/splitValidationDT", { title: "Split Validation Decision Tree", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix, ss })
   }
 
   //Decision Tree
@@ -294,17 +295,22 @@ class earthquekeController {
     let rata2 = [] //for rata2
     let Databenar = []
     let Datasalah = []
+    let confMatrix = []
+
 
     for (let i = 0; i < data.length; i++) {
       let { dataTraning, dataTesting } = CV.splitCrossValidation(data, i)
+
 
       let dataTrain = []
       for (let gempa of dataTraning) {
         dataTrain.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
       }
       let dataTest = []
+      let dataTest1 = [] // for confusion matrix
 
       for (let gempa of dataTesting) {
+        dataTest1.push([gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
         dataTest.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
       }
 
@@ -335,12 +341,22 @@ class earthquekeController {
         d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
         d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
       }
+      for (let d of dataTest1) {
+        d[0] = kategoriKekuatan[cluster.findCluster(d[0], clusterKekuatan.centroids)]
+        d[1] = kategoriKedalaman[cluster.findCluster(d[1], clusterKedalaman.centroids)]
+        d[2] = kategoriJarakGempa[cluster.findCluster(d[2], clusterJarakGempa.centroids)]
+      }
 
       //Algoritma Decision Tree
       let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
       let faktor = [1, 2, 3]
       const Decision = new DTC45(atribut, dataTrain)
       const tree = Decision.BuildTree(dataTrain, faktor)
+
+      const Model = (kasus) => { return Decision.predict(tree, kasus) }
+
+      const matrix = new Matrix(dataTest1, Model)
+      confMatrix[i] = matrix
 
       for (let j = 0; j < dataTest.length; j++) {
         let kasus = [kategoriKekuatan[cluster.findCluster(dataTest[j][1], clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(dataTest[j][2], clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(dataTest[j][3], clusterJarakGempa.centroids)]]
@@ -369,8 +385,7 @@ class earthquekeController {
 
     const sum = rata2.reduce((partialSum, a) => partialSum + a, 0);
 
-    res.render("Earthquake/CVDT", { title: "Cross Validation Decision Tree", css: "index.css", js: "crossValidationDT.js", data, rata: (sum / (rata2.length)).toFixed(2), simpanganBaku: simpanganBaku(rata2) })
-
+    res.render("Earthquake/CVDT", { title: "Cross Validation Decision Tree", css: "index.css", js: "crossValidationDT.js", data, rata: (sum / (rata2.length)).toFixed(2), simpanganBaku: simpanganBaku(rata2), confMatrix, ss })
   }
 
   //KNN
@@ -432,10 +447,122 @@ class earthquekeController {
 
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']], limit })
     let data = []
+    let dataTest1 = [] // for confusion matrix
+
+    for (let gempa of Earthquakes) {
+      dataTest1.push([gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+      data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+    }
+
+    let kekuatanGempa = []
+    let kedalamanGempa = []
+    let jarakGempa = []
+    for (let d of data) {
+      kekuatanGempa.push(+d[1])
+      kedalamanGempa.push(+d[2])
+      jarakGempa.push(+d[3])
+      d[1] = +d[1]
+      d[2] = +d[2]
+      d[3] = +d[3]
+    }
+
+    //Kategori
+    let kategoriKekuatan = ["lemah", 'sedangK', 'kuat']
+    let kategoriKedalaman = ['dangkal', 'sedangD', 'dalam']
+    let kategoriJarakGempa = ['dekat', 'sedangJ', 'jauh']
+
+    let cluster = new Clustering()
+    //Cluster
+    let clusterKekuatan = cluster.kMeans(kekuatanGempa, kategoriKekuatan.length)
+    let clusterKedalaman = cluster.kMeans(kedalamanGempa, kategoriKedalaman.length)
+    let clusterJarakGempa = cluster.kMeans(jarakGempa, kategoriJarakGempa.length)
+
+    for (let d of data) {
+      d[1] = kategoriKekuatan[cluster.findCluster(d[1], clusterKekuatan.centroids)]
+      d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
+      d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
+    }
+    for (let d of dataTest1) {
+      d[0] = kategoriKekuatan[cluster.findCluster(d[0], clusterKekuatan.centroids)]
+      d[1] = kategoriKedalaman[cluster.findCluster(d[1], clusterKedalaman.centroids)]
+      d[2] = kategoriJarakGempa[cluster.findCluster(d[2], clusterJarakGempa.centroids)]
+    }
+
+    //Algoritma Decision Tree
+    let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
+    let faktor = [1, 2, 3]
+    const Decision = new DTC45(atribut, data)
+    const tree = Decision.BuildTree(data, faktor, algo)
+    const Model = (kasus) => { return Decision.predict(tree, kasus) }
+
+    const matrix = new Matrix(dataTest1, Model)
+    // return res.send(tree)
+
+    for (let i = 0; i < Earthquakes.length; i++) {
+      let kasus = [kategoriKekuatan[cluster.findCluster(Earthquakes[i]['kekuatanGempa'], clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(Earthquakes[i]['kedalamanGempa'], clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(Earthquakes[i]['jarakGempa'], clusterJarakGempa.centroids)]]
+      let prediksi = Decision.predict(tree, kasus)
+
+      Earthquakes[i] = { lokasi: Earthquakes[i].lokasi, kekuatanGempa: Earthquakes[i].kekuatanGempa, kedalamanGempa: Earthquakes[i].kedalamanGempa, jarakGempa: Earthquakes[i].jarakGempa, dampakGempa: Earthquakes[i].dampakGempa, prediksi }
+
+    }
+
+    let benar = 0
+    let salah = 0
+    Earthquakes.map((e) => {
+      if (e.dampakGempa === e.prediksi) {
+        benar += 1
+      } else {
+        salah += 1
+      }
+    })
+
+    res.render("Earthquake/tableDT", { title: "TableDecisionTree", css: "index.css", js: "tableKnn.js", data: Earthquakes, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix, ss })
+
+  }
+
+
+  static async tableKnn(req, res) {
+    let limit = !req.query.limit ? 7 : req.query.limit
+    let k = !req.query.k ? 3 : req.query.k
+
+    let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], limit, order: [['id', 'ASC']] })
+
+    let data = []
     for (let gempa of Earthquakes) {
       data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
     }
 
+
+    let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa']
+    let knn = new KNN(atribut, data)
+
+    let prediksi = (knn.accuracy(data, k)).toFixed(2)
+
+    for (let i = 0; i < data.length; i++) {
+      let prediksi = knn.Train(data[i].slice(1, data[i].length - 1), k)
+      Earthquakes[i] = { lokasi: Earthquakes[i].lokasi, kekuatanGempa: Earthquakes[i].kekuatanGempa, kedalamanGempa: Earthquakes[i].kedalamanGempa, jarakGempa: Earthquakes[i].jarakGempa, dampakGempa: Earthquakes[i].dampakGempa, prediksi }
+    }
+    let benar = 0
+    let salah = 0
+    Earthquakes.map((e) => {
+      if (e.dampakGempa === e.prediksi) {
+        benar += 1
+      } else {
+        salah += 1
+      }
+    })
+
+    res.render("Earthquake/tableKnn", { title: "TableKNN", css: "index.css", js: "tableKnn.js", data: Earthquakes, prediksi, benar, salah })
+  }
+
+  static async unduhTableDT(req, res) {
+    let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
+    let algo = !req.query.algo ? true : (req.query.algo === 'id3' ? false : true)
+
+    let data = []
+    for (let gempa of Earthquakes) {
+      data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+    }
     let kekuatanGempa = []
     let kedalamanGempa = []
     let jarakGempa = []
@@ -479,53 +606,37 @@ class earthquekeController {
 
     }
 
-    let benar = 0
-    let salah = 0
-    Earthquakes.map((e) => {
-      if (e.dampakGempa === e.prediksi) {
-        benar += 1
-      } else {
-        salah += 1
+    const fields = [
+      {
+        label: "No",
+        value: "id"
+      },
+      {
+        label: "Lokasi",
+        value: "lokasi"
+      },
+      {
+        label: "Kekuatan Gempa",
+        value: "kekuatanGempa"
+      },
+      {
+        label: "Kedalaman Gempa",
+        value: "kedalamanGempa"
+      },
+      {
+        label: "Jarak Pusat Gempa",
+        value: "jarakGempa"
+      },
+      {
+        label: "Dampak Gempa",
+        value: "dampakGempa"
+      },
+      {
+        label: "Prediksi",
+        value: "prediksi"
       }
-    })
-
-    res.render("Earthquake/tableDT", { title: "TableDecisionTree", css: "index.css", js: "tableKnn.js", data: Earthquakes, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2) })
-
-  }
-
-
-  static async tableKnn(req, res) {
-    let limit = !req.query.limit ? 7 : req.query.limit
-    let k = !req.query.k ? 3 : req.query.k
-
-    let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], limit, order: [['id', 'ASC']] })
-
-    let data = []
-    for (let gempa of Earthquakes) {
-      data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
-    }
-
-
-    let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa']
-    let knn = new KNN(atribut, data)
-
-    let prediksi = (knn.accuracy(data, k)).toFixed(2)
-
-    for (let i = 0; i < data.length; i++) {
-      let prediksi = knn.Train(data[i].slice(1, data[i].length - 1), k)
-      Earthquakes[i] = { lokasi: Earthquakes[i].lokasi, kekuatanGempa: Earthquakes[i].kekuatanGempa, kedalamanGempa: Earthquakes[i].kedalamanGempa, jarakGempa: Earthquakes[i].jarakGempa, dampakGempa: Earthquakes[i].dampakGempa, prediksi }
-    }
-    let benar = 0
-    let salah = 0
-    Earthquakes.map((e) => {
-      if (e.dampakGempa === e.prediksi) {
-        benar += 1
-      } else {
-        salah += 1
-      }
-    })
-
-    res.render("Earthquake/tableKnn", { title: "TableKNN", css: "index.css", js: "tableKnn.js", data: Earthquakes, prediksi, benar, salah })
+    ]
+    return download(res, 'TabelDecisionTree.csv', fields, Earthquakes);
   }
 
   static async unduhTableKnn(req, res) {
@@ -582,15 +693,18 @@ class earthquekeController {
   static async postDecisionTree(req, res) {
 
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
-    let data = []
-    for (let gempa of Earthquakes) {
-      data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+    let CV = new crossValidation()
+    let data = CV.runCrossValidation(Earthquakes, 10)
+    let { dataTraning, dataTesting } = CV.splitCrossValidation(data, 0)
+    let dataTrain = []
+    for (let gempa of dataTraning) {
+      dataTrain.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
     }
 
     let kekuatanGempa = []
     let kedalamanGempa = []
     let jarakGempa = []
-    for (let d of data) {
+    for (let d of dataTrain) {
       kekuatanGempa.push(+d[1])
       kedalamanGempa.push(+d[2])
       jarakGempa.push(+d[3])
@@ -609,7 +723,7 @@ class earthquekeController {
     let clusterKedalaman = cluster.kMeans(kedalamanGempa, kategoriKedalaman.length)
     let clusterJarakGempa = cluster.kMeans(jarakGempa, kategoriJarakGempa.length)
 
-    for (let d of data) {
+    for (let d of dataTrain) {
       d[1] = kategoriKekuatan[cluster.findCluster(d[1], clusterKekuatan.centroids)]
       d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
       d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
@@ -617,8 +731,8 @@ class earthquekeController {
     //Algoritma Decision Tree
     let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
     let faktor = [1, 2, 3]
-    const Decision = new DTC45(atribut, data)
-    const tree = Decision.BuildTree(data, faktor, true)
+    const Decision = new DTC45(atribut, dataTrain)
+    const tree = Decision.BuildTree(dataTrain, faktor, true)
     //Predict
     let kasus = [kategoriKekuatan[cluster.findCluster(req.body.kekuatanGempa, clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(req.body.kedalamanGempa, clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(req.body.jarakGempa, clusterJarakGempa.centroids)]]
     let result = Decision.predict(tree, kasus) ?? "Tidak dapat diklasifikasikan"
@@ -715,6 +829,190 @@ class earthquekeController {
       }
     ]
     return download(res, 'dataGempaIndonesia.csv', fields, Earthquakes);
+  }
+
+  static async ReturnConfusionMatrixsplitValidationDT(req, res) {
+
+    let rasio = [6, 7, 8, 9]
+    let Accuracy = []
+    let Precision = []
+    let Recall = []
+
+    let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
+    let split = new splitValidation()
+
+    rasio.map((r) => {
+      let { dataTraning, dataTesting } = split.runSplitValidation(Earthquakes, r)
+
+      let data = []
+
+      for (let gempa of dataTraning) {
+        data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+      }
+      let dataTest = []
+      let dataTest1 = [] // for confusion matrix
+
+      for (let gempa of dataTesting) {
+        dataTest1.push([gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+        dataTest.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+      }
+      let kekuatanGempa = []
+      let kedalamanGempa = []
+      let jarakGempa = []
+      for (let d of data) {
+        kekuatanGempa.push(+d[1])
+        kedalamanGempa.push(+d[2])
+        jarakGempa.push(+d[3])
+        d[1] = +d[1]
+        d[2] = +d[2]
+        d[3] = +d[3]
+      }
+      //Kategori
+      let kategoriKekuatan = ["lemah", 'sedangK', 'kuat']
+      let kategoriKedalaman = ['dangkal', 'sedangD', 'dalam']
+      let kategoriJarakGempa = ['dekat', 'sedangJ', 'jauh']
+
+      let cluster = new Clustering()
+      //Cluster
+      let clusterKekuatan = cluster.kMeans(kekuatanGempa, kategoriKekuatan.length)
+      let clusterKedalaman = cluster.kMeans(kedalamanGempa, kategoriKedalaman.length)
+      let clusterJarakGempa = cluster.kMeans(jarakGempa, kategoriJarakGempa.length)
+
+      for (let d of data) {
+        d[1] = kategoriKekuatan[cluster.findCluster(d[1], clusterKekuatan.centroids)]
+        d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
+        d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
+      }
+      for (let d of dataTest1) {
+        d[0] = kategoriKekuatan[cluster.findCluster(d[0], clusterKekuatan.centroids)]
+        d[1] = kategoriKedalaman[cluster.findCluster(d[1], clusterKedalaman.centroids)]
+        d[2] = kategoriJarakGempa[cluster.findCluster(d[2], clusterJarakGempa.centroids)]
+      }
+
+      //Algoritma Decision Tree
+      let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
+      let faktor = [1, 2, 3]
+      const Decision = new DTC45(atribut, data)
+      const tree = Decision.BuildTree(data, faktor, true)
+      const Model = (kasus) => { return Decision.predict(tree, kasus) }
+
+      const matrix = new Matrix(dataTest1, Model)
+
+      Accuracy.push(matrix.Accuracy())
+      Precision.push(ss.mean(matrix.Precision()))
+      Recall.push(ss.mean(matrix.Recall()))
+    })
+
+    return res.send({ accuracy: Accuracy, precision: Precision, recall: Recall })
+  }
+
+  static async returnConfusionMatrixCrossValidation(req, res) {
+    let k = req.query.k ?? 10
+    let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
+    let CV = new crossValidation()
+    let data = CV.runCrossValidation(Earthquakes, k)
+
+    // return res.send({ data, query: k })
+
+    let rata2 = [] //for rata2
+    let Databenar = []
+    let Datasalah = []
+    let confMatrix = []
+
+
+    for (let i = 0; i < data.length; i++) {
+      let { dataTraning, dataTesting } = CV.splitCrossValidation(data, i)
+
+
+      let dataTrain = []
+      for (let gempa of dataTraning) {
+        dataTrain.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+      }
+      let dataTest = []
+      let dataTest1 = [] // for confusion matrix
+
+      for (let gempa of dataTesting) {
+        dataTest1.push([gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+        dataTest.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
+      }
+
+      let kekuatanGempa = []
+      let kedalamanGempa = []
+      let jarakGempa = []
+      for (let d of dataTrain) {
+        kekuatanGempa.push(+d[1])
+        kedalamanGempa.push(+d[2])
+        jarakGempa.push(+d[3])
+        d[1] = +d[1]
+        d[2] = +d[2]
+        d[3] = +d[3]
+      }
+      //Kategori
+      let kategoriKekuatan = ["lemah", 'sedangK', 'kuat']
+      let kategoriKedalaman = ['dangkal', 'sedangD', 'dalam']
+      let kategoriJarakGempa = ['dekat', 'sedangJ', 'jauh']
+
+      let cluster = new Clustering()
+      //Cluster
+      let clusterKekuatan = cluster.kMeans(kekuatanGempa, kategoriKekuatan.length)
+      let clusterKedalaman = cluster.kMeans(kedalamanGempa, kategoriKedalaman.length)
+      let clusterJarakGempa = cluster.kMeans(jarakGempa, kategoriJarakGempa.length)
+
+      for (let d of dataTrain) {
+        d[1] = kategoriKekuatan[cluster.findCluster(d[1], clusterKekuatan.centroids)]
+        d[2] = kategoriKedalaman[cluster.findCluster(d[2], clusterKedalaman.centroids)]
+        d[3] = kategoriJarakGempa[cluster.findCluster(d[3], clusterJarakGempa.centroids)]
+      }
+      for (let d of dataTest1) {
+        d[0] = kategoriKekuatan[cluster.findCluster(d[0], clusterKekuatan.centroids)]
+        d[1] = kategoriKedalaman[cluster.findCluster(d[1], clusterKedalaman.centroids)]
+        d[2] = kategoriJarakGempa[cluster.findCluster(d[2], clusterJarakGempa.centroids)]
+      }
+
+      //Algoritma Decision Tree
+      let atribut = ["kekuatanGempa", "kedalamanGempa", 'jarakGempa'] //Atribut
+      let faktor = [1, 2, 3]
+      const Decision = new DTC45(atribut, dataTrain)
+      const tree = Decision.BuildTree(dataTrain, faktor)
+      const Model = (kasus) => { return Decision.predict(tree, kasus) }
+
+      const matrix = new Matrix(dataTest1, Model)
+      confMatrix[i] = matrix
+
+      for (let j = 0; j < dataTest.length; j++) {
+        let kasus = [kategoriKekuatan[cluster.findCluster(dataTest[j][1], clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(dataTest[j][2], clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(dataTest[j][3], clusterJarakGempa.centroids)]]
+        let prediksi = Decision.predict(tree, kasus)
+
+        data[i][j] = { lokasi: data[i][j].lokasi, kekuatanGempa: data[i][j].kekuatanGempa, kedalamanGempa: data[i][j].kedalamanGempa, jarakGempa: data[i][j].jarakGempa, dampakGempa: data[i][j].dampakGempa, prediksi }
+      }
+
+      let benar = 0
+      let salah = 0
+      data[i].map((e) => {
+        if (e.dampakGempa === e.prediksi) {
+          benar += 1
+        } else {
+          salah += 1
+        }
+      })
+      Databenar[i] = benar
+      Datasalah[i] = salah
+      rata2[i] = +((benar / (benar + salah)) * 100).toFixed(2)
+    }
+
+    for (let z = 0; z < data.length; z++) {
+      data[z] = [+Databenar[z], +Datasalah[z], +rata2[z], ...data[z]]
+    }
+
+    let result = []
+    for (let j = 0; j < confMatrix.length; j++) {
+      result[j] = {}
+      result[j]['Accuracy'] = confMatrix[j].Accuracy()
+      result[j]["Precision"] = ss.mean(confMatrix[j].Precision())
+      result[j]['Recall'] = ss.mean(confMatrix[j].Recall())
+    }
+
+    return res.send(result)
   }
 
 }

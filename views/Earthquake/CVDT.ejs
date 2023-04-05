@@ -30,6 +30,7 @@
         </tbody>
       </table>
     </div>
+    <% let i=0 %>
     <% let nomor=1 %> 
     <% data.forEach(partisi => { %>
       <h4>Table <%= nomor++ %> </h4>
@@ -62,7 +63,8 @@
           <% }) %>
         </tbody>
       </table>
-      <h5 class="text-center"><span style="color: rgb(28, 28, 202);">Benar: <%= partisi[0] %>, </span> <span style="color: rgb(193, 50, 50);">Salah: <%=partisi[1] %>, </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= partisi[2] %>%</span> </h5>
+      <h5 class="text-center"><span style="color: rgb(28, 28, 202);">Benar: <%= partisi[0] %>, </span> <span style="color: rgb(193, 50, 50);">Salah: <%=partisi[1] %>, </span> <span style="color:rgb(129, 114, 31);">Akurasi: <%= partisi[2] %>%,</span> <span>Precision: <%= (ss.mean(confMatrix[i].Precision())*100).toFixed(2) %>%,</span> <span>Recall: <%= (ss.mean(confMatrix[i].Recall())*100).toFixed(2) %>%</span> </h5>
+      <% i++ %>
     <% }) %>
   </div>
 </div>

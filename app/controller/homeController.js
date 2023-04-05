@@ -32,6 +32,8 @@ class homeController {
 
     let cluster = new Clustering()
     //Cluster
+
+
     let clusterKekuatan = cluster.kMeans(kekuatanGempa, kategoriKekuatan.length)
     let clusterKedalaman = cluster.kMeans(kedalamanGempa, kategoriKedalaman.length)
     let clusterJarakGempa = cluster.kMeans(jarakGempa, kategoriJarakGempa.length)

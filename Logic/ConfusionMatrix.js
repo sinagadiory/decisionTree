@@ -117,18 +117,18 @@ class Matrix {
 
 }
 
-const DTC45 = new DT(["Cuaca", "Suhu"], data)
-const tree = DTC45.BuildTree(data, [1, 2])
+// const DTC45 = new DT(["Cuaca", "Suhu"], data)
+// const tree = DTC45.BuildTree(data, [1, 2])
 
-function Model(kasus) {
-  return DTC45.predict(tree, kasus)
-}
+// function Model(kasus) {
+//   return DTC45.predict(tree, kasus)
+// }
 
 // Buat objek Matrix
-const matrix = new Matrix(data1, Model)
+// const matrix = new Matrix(data1, Model)
 
 // Tampilkan confusion matrix
-console.log(matrix.ConfusionMatrix());
+// console.log(matrix.ConfusionMatrix());
 // matrix.PrintConfusionMatrix()
 // console.log(matrix.Accuracy());
 // console.log(matrix.Precision());
