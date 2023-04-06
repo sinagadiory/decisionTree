@@ -10,11 +10,11 @@
       <h4 class="mt-1">Decision Tree</h4>
       <form style="width: 80%;" method="POST" action="/decisiontree">
         <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
-        <input value="<%= data ? data.kekuatanGempa :"" %> " required class="form-control" type="text" name="kekuatanGempa">
+        <input value="<%= data ? data.kekuatanGempa :"" %> "  class="form-control" type="text" name="kekuatanGempa">
         <label id="kedalamanGempa" class="form-label" for="kedalamanGempa">Kedalaman Gempa</label>
-        <input value="<%= data ? data.kedalamanGempa : "" %> "  required class="form-control" type="text" name="kedalamanGempa">
+        <input value="<%= data ? data.kedalamanGempa : "" %> "  class="form-control" type="text" name="kedalamanGempa">
         <label id="jarakGempa" class="form-label" for="jarakGempa">Jarak Pusat Gempa</label>
-        <input value="<%= data ? data.jarakGempa :"" %>" required class="form-control" type="text" name="jarakGempa">
+        <input value="<%= data ? data.jarakGempa :"" %>"  class="form-control" type="text" name="jarakGempa">
         <!-- <select name="algoritma" required class="form-select mt-2" aria-label=".form-select-sm example">
           <option value=1 selected>Algoritma</option>
           <option value=0>ID3</option>
@@ -24,14 +24,18 @@
       </form>
     </div>
     <div class="col-lg-4 content align-self-center">
-      <% if (result!==null) { %>
+      <% if (result!==null && result!=='error') { %>
         <h1>Hasil Prediksi</h1>
         <h3><%= result %> </h3>
       <% } else if(result===null) { %>
         <img style="max-width: 90%;" src="/static/decisiontree.png" alt=""><br>
         <strong>Decision Tree adalah salah satu metode klasifikasi yang mengelompokan suatu object berdasarkan information Gain(ID3) atau Gain ratio(C4.5)</strong>
         <a href="/decisiontreeMethod">pelajarilebihlanjut</a>
-      <% }  %> 
+      <% } else if(result==='error') { %>
+        <div class="alert alert-danger" role="alert">
+          Pastikan semua inputan diisi dan inputkan berupa angka
+        </div>
+      <% } %> 
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ const { Op } = require("sequelize")
 const { userService } = require("../service")
 let { KNN, splitValidation, crossValidation, DTC45, Clustering, Matrix } = require("../../Logic/index")
 const ss = require("simple-statistics")
+const validator = require("validator")
 
 class earthquekeController {
 
@@ -288,6 +289,7 @@ class earthquekeController {
   //Decision Tree
   static async evaluasiModelCrossValidationDT(req, res) {
     let k = !req.query.k ? 10 : req.query.k
+    if (k <= 0) return res.send({ message: "Inputan Anda Salah" })
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
     let CV = new crossValidation()
     let data = CV.runCrossValidation(Earthquakes, k)
@@ -296,6 +298,8 @@ class earthquekeController {
     let Databenar = []
     let Datasalah = []
     let confMatrix = []
+    let rataPrecision = []
+    let rataRecall = []
 
 
     for (let i = 0; i < data.length; i++) {
@@ -357,6 +361,8 @@ class earthquekeController {
 
       const matrix = new Matrix(dataTest1, Model)
       confMatrix[i] = matrix
+      rataPrecision.push(ss.mean(matrix.Precision()))
+      rataRecall.push(ss.mean(matrix.Recall()))
 
       for (let j = 0; j < dataTest.length; j++) {
         let kasus = [kategoriKekuatan[cluster.findCluster(dataTest[j][1], clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(dataTest[j][2], clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(dataTest[j][3], clusterJarakGempa.centroids)]]
@@ -385,7 +391,7 @@ class earthquekeController {
 
     const sum = rata2.reduce((partialSum, a) => partialSum + a, 0);
 
-    res.render("Earthquake/CVDT", { title: "Cross Validation Decision Tree", css: "index.css", js: "crossValidationDT.js", data, rata: (sum / (rata2.length)).toFixed(2), simpanganBaku: simpanganBaku(rata2), confMatrix, ss })
+    res.render("Earthquake/CVDT", { title: "Cross Validation Decision Tree", css: "index.css", js: "crossValidationDT.js", data, rata: (sum / (rata2.length)).toFixed(2), simpanganBaku: simpanganBaku(rata2), confMatrix, ss, rataPrecision, rataRecall })
   }
 
   //KNN
@@ -734,6 +740,11 @@ class earthquekeController {
     const Decision = new DTC45(atribut, dataTrain)
     const tree = Decision.BuildTree(dataTrain, faktor, true)
     //Predict
+    for (let input in req.body) {
+      if (!validator.isNumeric(req.body[input].trim())) {
+        return res.render("Earthquake/decisiontree", { title: "DecisionTree", css: "decisiontree.css", js: "decisionTree.js", data: req.body, result: "error" })
+      }
+    }
     let kasus = [kategoriKekuatan[cluster.findCluster(req.body.kekuatanGempa, clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(req.body.kedalamanGempa, clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(req.body.jarakGempa, clusterJarakGempa.centroids)]]
     let result = Decision.predict(tree, kasus) ?? "Tidak dapat diklasifikasikan"
 

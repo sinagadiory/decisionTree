@@ -14,18 +14,20 @@
       </div>
     </div>
     <div class="mb-3">
-      <h3 class="text-center">Hasil Evaluasi</h3>
+      <!-- <h3 class="text-center">Hasil Evaluasi</h3> -->
       <table class="table table-warning table-bordered w-50 m-auto">
         <thead>
           <tr>
             <th scope="col">Rata-rata Akurasi</th>
-            <th scope="col">Simpangan Baku</th>
+            <th scope="col">Rata-rata Precision</th>
+            <th scope="col">Rata-rata Recall</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><%= rata %> </td>
-            <td><%= simpanganBaku %> </td>
+            <td><%= rata %>% </td>
+            <td><%= (ss.mean(rataPrecision)*100).toFixed(2) %>% </td>
+            <td><%= (ss.mean(rataRecall)*100).toFixed(2) %>%</td>
           </tr>
         </tbody>
       </table>
