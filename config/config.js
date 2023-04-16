@@ -2,7 +2,7 @@ const {
   DB_USERNAME = "postgres",
   DB_PASSWORD = "12345",
   DB_HOST = "127.0.0.1",
-  DB_NAME = "skripsi",
+  DB_NAME = "skripsiTest",
   PORT = 5432,
 } = process.env;
 

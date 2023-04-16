@@ -701,7 +701,7 @@ class earthquekeController {
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
     let CV = new crossValidation()
     let data = CV.runCrossValidation(Earthquakes, 10)
-    let { dataTraning, dataTesting } = CV.splitCrossValidation(data, 0)
+    let { dataTraning, dataTesting } = CV.splitCrossValidation(data, 2)
     let dataTrain = []
     for (let gempa of dataTraning) {
       dataTrain.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
