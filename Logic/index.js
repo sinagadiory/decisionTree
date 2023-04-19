@@ -4,8 +4,9 @@ const DTC45 = require("./DTC45")
 const KNN = require("./KNN")
 const splitValidation = require("./splitValidation")
 const Matrix = require("./ConfusionMatrix")
+const MatchDampakGempa = require("./helper")
 
 
 module.exports = {
-  Clustering, crossValidation, DTC45, KNN, splitValidation, Matrix
+  Clustering, crossValidation, DTC45, KNN, splitValidation, Matrix, MatchDampakGempa
 }

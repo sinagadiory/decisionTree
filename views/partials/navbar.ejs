@@ -15,6 +15,12 @@
           <% }  %> 
         </li>
       </ul>
+      <marquee>
+        <div class="text-center">
+          <h3 style="color: rgb(87, 139, 9);">Aplikasi Prediksi Dampak Gempa di Indonesia</h3>
+          <strong>Created By Diory Pribadi Sinaga</strong>
+        </div>
+      </marquee>
       <form class="d-flex" role="search">
         <% if (css!=='home.css' && css!=='update.css') { %>
           <a href="/admin/login" class="btn btn-sm btn-outline-success" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
@@ -25,8 +31,17 @@
     </div>
   </div>
 </nav>
-<marquee> <h3 style="color: rgb(87, 139, 9);">Aplikasi Prediksi Dampak Gempa di Indonesia</h3> </marquee>
-<marquee direction="right"> <h4 style="color: rgb(187, 144, 36)">Created By Diory Pribadi Sinaga</h4> </marquee>
+<div class="peringatan container my-4">
+  <div class="alert alert-warning" role="alert">
+    <h4>Perkiraan Gempa!! <span style="font-size: 1.2rem;">(Berdasarkan data terakhir)</span></h4>
+    <div class="tengah text-center">
+      <strong id="kg">Kekuatan Gempa</strong>
+      <strong id="kdg">Kedalaman Gempa</strong>
+      <strong id="jg">Jarak Pusat Gempa</strong>
+      <strong id="hasil" class="text-center"></strong>
+    </div>
+  </div>
+</div>
 <div class="container pt-2">
   <div id="menu" class="mb-3 d-flex">
     <div class="dropdown1">
@@ -58,3 +73,15 @@
     </div>
   </div>
 </div>
+<script>
+
+  const getData=async()=>{
+    let response= await fetch("/api/decisiontree")
+    let {result,kekuatanGempa,kedalamanGempa,jarakGempa} = await response.json();
+    document.getElementById("kg").textContent=`Kekuatan Gempa = ${kekuatanGempa.toFixed(2)},`
+    document.getElementById("kdg").textContent=`Kedalaman Gempa = ${kedalamanGempa.toFixed(2)},`
+    document.getElementById("jg").textContent=`Jarak Pusat Gempa = ${jarakGempa.toFixed(2)},`
+    document.getElementById("hasil").innerHTML=`Dampak Gempa = ${result}`
+  }
+  getData()
+</script>

@@ -2,6 +2,8 @@
 const { userService } = require("../service")
 const { Earthquake } = require("../../models")
 let { Clustering } = require("../../Logic/index")
+const axios = require("axios")
+const ss = require("simple-statistics")
 class homeController {
 
   static async index(req, res) {
@@ -45,6 +47,10 @@ class homeController {
         gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
       }
     }
+
+    // let fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl
+    // let result = await axios.get(`${fullUrl}api/decisiontree`)
+    // return res.send(result.data)
     res.render("index", { title: "Prediksi Gempa di Indonesia", css: "index.css", data: Earthquakes, js: "index.js" })
   }
 

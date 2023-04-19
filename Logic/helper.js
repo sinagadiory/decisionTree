@@ -1,5 +1,3 @@
-const axios = require("axios")
-
 function MatchDampakGempa(dirasakan) {
   let result = ""
   if (dirasakan.match("I") || dirasakan.match("II")) {
@@ -20,12 +18,4 @@ function MatchDampakGempa(dirasakan) {
   return result
 }
 
-axios.get("https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json")
-  .then(({ data }) => {
-    let dataGempa = data.Infogempa.gempa
-    dataGempa.map((d) => {
-      console.log(MatchDampakGempa(d.Dirasakan));
-      console.log("-------");
-    })
-  })
-
+module.exports = MatchDampakGempa
