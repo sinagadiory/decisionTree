@@ -4,7 +4,14 @@ const { Earthquake } = require("../../models")
 let { Clustering } = require("../../Logic/index")
 const axios = require("axios")
 const ss = require("simple-statistics")
+const { MatchDampakGempa } = require("../../Logic/index")
 class homeController {
+
+  static async dataNew(req, res) {
+    let dataGempaNew = await axios.get("https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json")
+    dataGempaNew = dataGempaNew.data.Infogempa.gempa
+    res.render("dataNew", { data: dataGempaNew, MatchDampakGempa, title: "Data Gempa Terbaru", css: null, js: null })
+  }
 
   static async index(req, res) {
 
@@ -47,10 +54,6 @@ class homeController {
         gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
       }
     }
-
-    // let fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl
-    // let result = await axios.get(`${fullUrl}api/decisiontree`)
-    // return res.send(result.data)
     res.render("index", { title: "Prediksi Gempa di Indonesia", css: "index.css", data: Earthquakes, js: "index.js" })
   }
 

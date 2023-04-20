@@ -15,12 +15,22 @@
           <% }  %> 
         </li>
       </ul>
-      <marquee>
+      <!-- <h2 class="m-auto">Test</h2> -->
+      <div class=" me-auto">
         <div class="text-center">
-          <h3 style="color: rgb(87, 139, 9);">Aplikasi Prediksi Dampak Gempa di Indonesia</h3>
+          <h4 style="color: rgb(87, 139, 9);">Aplikasi Prediksi Dampak Gempa di Indonesia</h4>
           <strong>Created By Diory Pribadi Sinaga</strong>
         </div>
-      </marquee>
+      </div>
+      <!-- <div class="dropdown mx-3">
+        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="?theme=dark"><i class="fa-solid fa-moon"></i></a></li>
+          <li><a class="dropdown-item" href="?theme=light"><i class="fa-regular fa-sun"></i></a></li>
+        </ul>
+      </div> -->
       <form class="d-flex" role="search">
         <% if (css!=='home.css' && css!=='update.css') { %>
           <a href="/admin/login" class="btn btn-sm btn-outline-success" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
@@ -33,15 +43,21 @@
 </nav>
 <div class="peringatan container my-4">
   <div class="alert alert-warning" role="alert">
-    <h4>Perkiraan Gempa!! <span style="font-size: 1.2rem;">(Berdasarkan data terakhir)</span></h4>
+    <!-- <h4>Perkiraan Gempa!! <span style="font-size: 1.2rem;">(Berdasarkan data terakhir)</span></h4>
     <div class="tengah text-center">
       <strong id="kg">Kekuatan Gempa</strong>
       <strong id="kdg">Kedalaman Gempa</strong>
       <strong id="jg">Jarak Pusat Gempa</strong>
       <strong id="hasil" class="text-center"></strong>
-    </div>
+    </div> -->
+    <h5 style="font-size: 1.1rem;">Sebelum menggunakan, silahkan kunjungi tutorial di link berikut <a target="_blank" href="https://sinagadiorytutorial.netlify.app/docs/pendahuluan">tutorial</a></h5>
+    <h5 style="font-size: 1.1rem;">Kamu juga dapat melihat teori pendukung dalam membangun website ini <a target="_blank" href="https://sinagadiorytutorial.netlify.app/articles/intro">kunjungi</a></h5>
+    <h5 style="font-size: 1.1rem;">Informasi selengkapnya mengenai website ini kunjungi link berikut <a target="_blank" href="https://sinagadiorytutorial.netlify.app/aboutwebsite">aboutwebsite</a></h5>
   </div>
 </div>
+<marquee behavior="scroll" direction="left">
+  <h4>Website ini merupakan hasil tugas akhir mahasiswa Matematika UPI yang dibimbing oleh Ibu Dra. Hj. Rini Marwati, M.S dan Dr. Bambang Avip Priatna, M.Si</h4>
+</marquee>
 <div class="container pt-2">
   <div id="menu" class="mb-3 d-flex">
     <div class="dropdown1">

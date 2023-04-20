@@ -7,6 +7,7 @@ const { superAdmin, authMiddleware } = require("../../app/middleware")
 router.get("/", homeController.index)
 router.get("/home", authMiddleware, homeController.home)
 router.get("/logout", authMiddleware, userController.logout)
+router.get("/datanew", homeController.dataNew)
 
 router.get("/superAdmin", authMiddleware, superAdmin, homeController.superAdmin)
 router.get("/delete/admin/:id", authMiddleware, superAdmin, homeController.deleteAdmin)

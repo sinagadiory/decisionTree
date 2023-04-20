@@ -18,4 +18,5 @@ function MatchDampakGempa(dirasakan) {
   return result
 }
 
+
 module.exports = MatchDampakGempa
