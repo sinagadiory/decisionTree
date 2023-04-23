@@ -5,8 +5,8 @@
   <h1>Prediksi</h1>
   <div class="row my-4 pt-4 pb-5">
     <div class="col-lg-8">
-      <a class="btn add btn-success btn-sm" style="text-decoration: none;" href="/knn"><i class="fa-solid fa-brain"></i> KNN(K-Nearest Neigbords)</a>
-      <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/naivebayes"><i class="fa-solid fa-calculator"></i> Naive Bayes</a>
+      <!-- <a class="btn add btn-success btn-sm" style="text-decoration: none;" href="/knn"><i class="fa-solid fa-brain"></i> KNN(K-Nearest Neigbords)</a>
+      <a class="mx-2 btn btn-dark btn-sm" style="text-decoration: none;" href="/naivebayes"><i class="fa-solid fa-calculator"></i> Naive Bayes</a> -->
       <h4 class="mt-1">Decision Tree</h4>
       <form style="width: 80%;" method="POST" action="/decisiontree">
         <label id="kekuatanGempa" class="form-label" for="kekuatanGempa">Kekuatan Gempa</label>
@@ -28,9 +28,9 @@
         <h1>Hasil Prediksi</h1>
         <h3><%= result %> </h3>
       <% } else if(result===null) { %>
-        <img style="max-width: 90%;" src="/static/decisiontree.png" alt=""><br>
+        <img style="max-width: 100%;" src="/static/strukturDT.png" alt=""><br>
         <strong>Decision Tree adalah salah satu metode klasifikasi yang mengelompokan suatu object berdasarkan information Gain(ID3) atau Gain ratio(C4.5)</strong>
-        <a href="/decisiontreeMethod">pelajarilebihlanjut</a>
+        <a href="https://sinagadiorytutorial.netlify.app/articles/klasifikasi/decisiontree" target="_blank">pelajarilebihlanjut</a>
       <% } else if(result==='error') { %>
         <div class="alert alert-danger" role="alert">
           Pastikan semua inputan diisi dan inputkan berupa angka

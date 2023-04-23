@@ -3,7 +3,7 @@
 
 <div class="container py-3 my-3">
   <div class="row">
-    <h5>Tabel Gempa</h5>
+    <h5 id="table">Tabel Gempa</h5>
     <div class="d-flex justify-content-between mb-2">
       <div class="tombol">
         <a class="btn btn-primary btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -11,8 +11,8 @@
         </a>
       
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/?type=Category">ByCategory</a></li>
-          <li><a class="dropdown-item" href="/">NotByCategory</a></li>
+          <li><a class="dropdown-item" href="/?page=<%= page %>&type=Category#table">ByCategory</a></li>
+          <li><a class="dropdown-item" href="/?page=<%= page %>&type=NotCategory#table">NotByCategory</a></li>
         </ul>
         <a class="btn btn-outline-warning btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="fa-solid fa-download"></i> Export data
@@ -28,15 +28,33 @@
       </form>
     </div>
     <div class="d-flex">
-      <div class="input-group mt-2 mb-3" style="max-width: 10%;">
-        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+      <!-- <div class="input-group mb-3" style="max-width: 10%;">
+        <select class="form-select" aria-label=".form-select-sm example">
           <option selected>Show</option>
           <option value="10">10</option>
           <option value="25">25</option>
           <option value="50">50</option>
           <option value="99999">All</option>
         </select>
-      </div>
+      </div> -->
+      <nav aria-label="Page navigation example mx-2">
+        <ul class="pagination">
+          <% if (+page !==1) { %>
+            <li class="page-item"><a class="page-link" href="?page=<%= +page-1 %>#table">Previous</a></li>
+          <% } %>
+          <% for( let i = 1; i <= 3; i++ ) { %>
+            <% if (+page + i < banyak+1 ) { %>
+              <li class="page-item"><a class="page-link" href="?page=<%= +page + i %>#table"><%= +page+i  %></a></li>
+            <% } %>
+          <% } %>
+          <% if ((+page + 3)<banyak) { %>
+            <li class="page-item"><a class="page-link" href="?page=<%= +page + 4 %>#table">Next</a></li>
+          <% } %>
+          <!-- <li class="page-item"><a class="page-link" href="?page=<%= +page + 2 %>#table"><%= +page+2 %></a></li>
+          <li class="page-item"><a class="page-link" href="?page=<%= +page + 3 %>#table"><%= +page+3 %></a></li>
+          <li class="page-item"><a class="page-link" href="?page=<%= +page + 4 %>#table">Next</a></li> -->
+        </ul>
+      </nav>
     </div>
     <table class="table table-striped table-bordered table-hover">
       <thead>
@@ -50,10 +68,10 @@
         </tr>
       </thead>
       <tbody class="hasil">
-        <% let no=1 %> 
+        <% let no = (page-1)*15 %> 
         <% data.forEach(d => { %>
           <tr>
-            <th scope="row"><%= no++ %> </th>
+            <th scope="row"><%= ++no %> </th>
             <td><%=  d.lokasi %> </td>
             <td><%= d.kekuatanGempa %> </td>
             <td><%= d.kedalamanGempa  %> </td>

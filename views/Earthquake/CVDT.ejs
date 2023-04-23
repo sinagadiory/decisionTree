@@ -59,7 +59,12 @@
                 <td><%= d.kedalamanGempa  %> </td>
                 <td><%= d.jarakGempa  %> </td>
                 <td><%= d.dampakGempa %> </td>
-                <td><%= d.prediksi %> </td>
+                <!-- <td><%= d.prediksi %> </td> -->
+                <% if(d.dampakGempa == d.prediksi) { %>
+                  <td><i class="fa-solid fa-check mx-2" style="color: #0f51c2;"></i><%= d.prediksi %> </td>
+                <% } else {  %>
+                  <td><i class="fa-solid fa-xmark mx-2" style="color: #db141e;"></i><%= d.prediksi %> </td>
+                <% } %>
               </tr>
             <% } %>
           <% }) %>

@@ -1,7 +1,7 @@
 // const { User } = require("../../models")
 const { userService } = require("../service")
 const { Earthquake } = require("../../models")
-let { Clustering } = require("../../Logic/index")
+let { Clustering, jarakGempaEasy } = require("../../Logic/index")
 const axios = require("axios")
 const ss = require("simple-statistics")
 const { MatchDampakGempa } = require("../../Logic/index")
@@ -10,15 +10,23 @@ class homeController {
   static async dataNew(req, res) {
     let dataGempaNew = await axios.get("https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json")
     dataGempaNew = dataGempaNew.data.Infogempa.gempa
-    res.render("dataNew", { data: dataGempaNew, MatchDampakGempa, title: "Data Gempa Terbaru", css: null, js: null })
+    res.render("dataNew", { data: dataGempaNew, MatchDampakGempa, title: "Data Gempa Terbaru", css: null, js: null, jarakGempa: jarakGempaEasy(dataGempaNew) })
   }
 
   static async index(req, res) {
 
-    let { type = "Not Category" } = req.query
-    let Earthquakes = await Earthquake.findAll({ limit: 7, order: [['id', 'ASC']] })
+    let { type = "Not Category", page = 1 } = req.query
+    let banyak = await Earthquake.count()
+    if (page < 1) return res.redirect("/")
+    let Earthquakes = null
+    if (Math.ceil(banyak / 10) >= page) {
+      Earthquakes = await Earthquake.findAll({ offset: (page - 1) * 15, limit: 15, order: [['id', 'ASC']] })
+    } else {
+      Earthquakes = await Earthquake.findAll({ offset: (page - 1) * 15, order: [['id', 'ASC']] })
+    }
+    let EarthquakesKategori = await Earthquake.findAll({ order: [['id', 'ASC']] })
     let data = []
-    for (let gempa of Earthquakes) {
+    for (let gempa of EarthquakesKategori) {
       data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
     }
 
@@ -54,7 +62,7 @@ class homeController {
         gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
       }
     }
-    res.render("index", { title: "Prediksi Gempa di Indonesia", css: "index.css", data: Earthquakes, js: "index.js" })
+    res.render("index", { title: "Prediksi Gempa di Indonesia", css: "index.css", data: Earthquakes, js: "index.js", banyak: Math.ceil(banyak / 15), page })
   }
 
   static async home(req, res) {

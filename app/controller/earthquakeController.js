@@ -202,8 +202,9 @@ class earthquekeController {
 
   //Decision Tree
   static async splitValidationDT(req, res) {
-
+    let { type = "NotCategory" } = req.query
     let rasio = !req.query.rasio ? 8 : +req.query.rasio
+    if (rasio < 6 || rasio > 9) return res.redirect("/evaluasidecisiontree/splitvalidation")
     let algo = !req.query.algo ? true : (req.query.algo === 'id3' ? false : true)
 
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
@@ -234,9 +235,9 @@ class earthquekeController {
       d[3] = +d[3]
     }
     //Kategori
-    let kategoriKekuatan = ["lemah", 'sedangK', 'kuat']
-    let kategoriKedalaman = ['dangkal', 'sedangD', 'dalam']
-    let kategoriJarakGempa = ['dekat', 'sedangJ', 'jauh']
+    let kategoriKekuatan = ["lemah", 'sedang', 'kuat']
+    let kategoriKedalaman = ['dangkal', 'sedang', 'dalam']
+    let kategoriJarakGempa = ['dekat', 'sedang', 'jauh']
 
     let cluster = new Clustering()
     //Cluster
@@ -282,14 +283,26 @@ class earthquekeController {
       }
     })
 
+    if (type === 'Category') {
+      for (let gempa of dataTraning) {
+        gempa['kekuatanGempa'] = kategoriKekuatan[cluster.findCluster(gempa['kekuatanGempa'], clusterKekuatan.centroids)]
+        gempa['kedalamanGempa'] = kategoriKedalaman[cluster.findCluster(gempa['kedalamanGempa'], clusterKedalaman.centroids)]
+        gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
+      }
+      for (let gempa of dataTesting) {
+        gempa['kekuatanGempa'] = kategoriKekuatan[cluster.findCluster(gempa['kekuatanGempa'], clusterKekuatan.centroids)]
+        gempa['kedalamanGempa'] = kategoriKedalaman[cluster.findCluster(gempa['kedalamanGempa'], clusterKedalaman.centroids)]
+        gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
+      }
+    }
 
-    res.render("Earthquake/splitValidationDT", { title: "Split Validation Decision Tree", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix, ss })
+    res.render("Earthquake/splitValidationDT", { title: "Split Validation Decision Tree", css: "index.css", js: null, result: null, dataTraning, dataTesting, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix, ss, rasio })
   }
 
   //Decision Tree
   static async evaluasiModelCrossValidationDT(req, res) {
     let k = !req.query.k ? 10 : req.query.k
-    if (k <= 0) return res.send({ message: "Inputan Anda Salah" })
+    if (k < 2 || k > 15) return res.redirect("/evaluasidecisiontree/crossValidation")
     let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']] })
     let CV = new crossValidation()
     let data = CV.runCrossValidation(Earthquakes, k)
@@ -448,14 +461,20 @@ class earthquekeController {
 
   //Table Decision Tree
   static async tableDecisionTree(req, res) {
-    let limit = req.query.limit ?? 7
-    let algo = !req.query.algo ? true : (req.query.algo === 'id3' ? false : true)
-
-    let Earthquakes = await Earthquake.findAll({ attributes: ["lokasi", 'kekuatanGempa', 'kedalamanGempa', 'jarakGempa', 'dampakGempa'], order: [['id', 'ASC']], limit })
+    let { type = "Not Category", page = 1, algo = true } = req.query
+    let banyak = await Earthquake.count()
+    if (page < 1) return res.redirect("/")
+    let Earthquakes = null
+    if (Math.ceil(banyak / 10) >= page) {
+      Earthquakes = await Earthquake.findAll({ offset: (page - 1) * 15, limit: 15, order: [['id', 'ASC']] })
+    } else {
+      Earthquakes = await Earthquake.findAll({ offset: (page - 1) * 15, order: [['id', 'ASC']] })
+    }
+    let EarthquakesKategori = await Earthquake.findAll({ order: [['id', 'ASC']] })
     let data = []
     let dataTest1 = [] // for confusion matrix
 
-    for (let gempa of Earthquakes) {
+    for (let gempa of EarthquakesKategori) {
       dataTest1.push([gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
       data.push([gempa.lokasi, gempa.kekuatanGempa, gempa.kedalamanGempa, gempa.jarakGempa, gempa.dampakGempa])
     }
@@ -473,9 +492,9 @@ class earthquekeController {
     }
 
     //Kategori
-    let kategoriKekuatan = ["lemah", 'sedangK', 'kuat']
-    let kategoriKedalaman = ['dangkal', 'sedangD', 'dalam']
-    let kategoriJarakGempa = ['dekat', 'sedangJ', 'jauh']
+    let kategoriKekuatan = ["lemah", 'sedang', 'kuat']
+    let kategoriKedalaman = ['dangkal', 'sedang', 'dalam']
+    let kategoriJarakGempa = ['dekat', 'sedang', 'jauh']
 
     let cluster = new Clustering()
     //Cluster
@@ -522,7 +541,14 @@ class earthquekeController {
       }
     })
 
-    res.render("Earthquake/tableDT", { title: "TableDecisionTree", css: "index.css", js: "tableKnn.js", data: Earthquakes, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix, ss })
+    if (type === 'Category') {
+      for (let gempa of Earthquakes) {
+        gempa['kekuatanGempa'] = kategoriKekuatan[cluster.findCluster(gempa['kekuatanGempa'], clusterKekuatan.centroids)]
+        gempa['kedalamanGempa'] = kategoriKedalaman[cluster.findCluster(gempa['kedalamanGempa'], clusterKedalaman.centroids)]
+        gempa['jarakGempa'] = kategoriJarakGempa[cluster.findCluster(gempa['jarakGempa'], clusterJarakGempa.centroids)]
+      }
+    }
+    res.render("Earthquake/tableDT", { title: "TableDecisionTree", css: "index.css", js: "tableKnn.js", data: Earthquakes, benar, salah, prediksi: ((benar / (benar + salah)) * 100).toFixed(2), matrix, ss, page, banyak: Math.ceil(banyak / 15) })
 
   }
 

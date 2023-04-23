@@ -31,7 +31,7 @@ class visualController {
 
   static async VisualConfusionMatrixCV(req, res) {
     let k = !req.query.k ? 10 : req.query.k
-    if (k <= 0) return res.send({ message: "Inputan Anda Salah" })
+    if (k < 2 || k > 15) return res.redirect("/confusionmatrix/performa/crossvalidation")
     res.render("Visual/MatrixCV", { title: "Compare Model Cross Validation", js: "matrixCV.js", css: "visualcategory.css", panjang: k })
   }
 }

@@ -1,4 +1,5 @@
 const axios = require("axios")
+const validator = require("validator")
 
 function MatchDampakGempa(dirasakan) {
   let result = ""
@@ -20,12 +21,35 @@ function MatchDampakGempa(dirasakan) {
   return result
 }
 
+function jarakGempa(data) {
+  let result = []
+  dataGempa.map((d) => {
+    let check = d['Wilayah'].split(" ");
+    check.map((c) => {
+      if (c.match("km")) {
+        let check1 = c.split("km")[0]
+        if (validator.isNumeric(check1)) result.push(check1)
+      };
+      if (validator.isNumeric(c)) result.push(c)
+    })
+  })
+  return [...result]
+}
+
 axios.get("https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json")
   .then(({ data }) => {
     let dataGempa = data.Infogempa.gempa
+    let result = []
     dataGempa.map((d) => {
-      console.log(MatchDampakGempa(d.Dirasakan));
-      console.log("-------");
+      let check = d['Wilayah'].split(" ");
+      check.map((c) => {
+        if (c.match("km")) {
+          let check1 = c.split("km")[0]
+          if (validator.isNumeric(check1)) result.push(+check1)
+        };
+        if (validator.isNumeric(c)) result.push(+c)
+      })
     })
+    console.log([...result]);
   })
 

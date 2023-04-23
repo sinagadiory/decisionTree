@@ -1,5 +1,5 @@
 const { Earthquake } = require("../../models")
-let { KNN, splitValidation, crossValidation, DTC45, Clustering, Matrix } = require("../../Logic/index")
+let { crossValidation, DTC45, Clustering, jarakGempaEasy } = require("../../Logic/index")
 const axios = require("axios")
 const ss = require("simple-statistics")
 
@@ -52,11 +52,10 @@ class Api {
     dataGempaNew = dataGempaNew.data.Infogempa.gempa
     let jumlahKekuatanGempa = []
     let jumlahkedalamanGempa = []
-    let jumlahJarakGempa = []
+    let jumlahJarakGempa = jarakGempaEasy(dataGempaNew)
     dataGempaNew.map((d) => {
       jumlahKekuatanGempa.push(+d.Magnitude)
       jumlahkedalamanGempa.push(+d.Kedalaman.split(" ")[0])
-      jumlahJarakGempa.push(+d.Wilayah.split(" ")[5])
     })
 
     let kasus = [kategoriKekuatan[cluster.findCluster(ss.mean(jumlahKekuatanGempa), clusterKekuatan.centroids)], kategoriKedalaman[cluster.findCluster(ss.mean(jumlahkedalamanGempa), clusterKedalaman.centroids)], kategoriJarakGempa[cluster.findCluster(ss.mean(jumlahJarakGempa), clusterJarakGempa.centroids)]]
