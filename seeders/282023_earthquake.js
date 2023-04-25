@@ -3,7 +3,7 @@ const csv = require('async-csv');
 const fs = require('fs').promises;
 
 async function ReadData() {
-  const csvString = await fs.readFile('./data/DataGempaTest1.csv', 'utf-8');
+  const csvString = await fs.readFile('./data/DataGempa.csv', 'utf-8');
 
   const rows = await csv.parse(csvString);
   const DataGempa = rows.slice(1)
